@@ -3,22 +3,6 @@
   A Beginner-Friendly Step-by-Step Guide
 ========================================================
 
-WHAT ARE WEB FORMS AND CONTROLS?
-----------------------------------
-ASP.NET Web Forms let you build interactive web pages using
-drag-and-drop controls -- pre-built components like text boxes,
-buttons, calendars, and image rotators that you place on a page.
-
-Instead of writing raw HTML for every element, ASP.NET gives
-you ready-made "server controls" written as <asp:...> tags.
-These controls run on the server and generate the final HTML
-that the user's browser receives.
-
-Each question in this guide uses a Default.aspx file (the page
-design) and sometimes a Default.aspx.cs file (the C# code that
-runs behind the scenes when a user interacts with the page).
-
-
 ========================================================
 QUESTION 1 -- VALIDATION CONTROLS
 ========================================================

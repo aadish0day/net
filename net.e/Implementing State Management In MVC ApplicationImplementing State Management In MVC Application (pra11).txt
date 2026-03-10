@@ -2,18 +2,6 @@
    PRACTICAL 11 - STATE MANAGEMENT IN AN MVC APPLICATION
 ================================================================
 
-
-----------------------------------------------------------------
-OBJECTIVE
-----------------------------------------------------------------
-  Build an ASP.NET MVC application that demonstrates:
-    - Session    : Temporarily stores username after login
-    - Cookies    : Remembers username across browser sessions
-    - Login page : Takes username input with a "Remember Me" option
-    - Welcome page: Greets the user by name
-    - Logout     : Clears the session and returns to login
-
-
 ================================================================
 STEP 1 : CREATE THE PROJECT
 ================================================================
@@ -215,39 +203,6 @@ FOLDER STRUCTURE
                  |-- Welcome.cshtml    (Welcome page with Logout link)
 
 
-================================================================
-HOW STATE MANAGEMENT WORKS HERE
-================================================================
-
-  METHOD       WHAT IT STORES         HOW LONG IT LASTS
-  -----------  ---------------------  --------------------------
-  Session      Username after login   Until browser is closed
-                                       or Logout is clicked
-  Cookie       Username (if ticked)   7 days on user's machine
-                                       (persists even after close)
-
-
-================================================================
-HOW EACH ACTION METHOD WORKS
-================================================================
-
-  METHOD          WHAT IT DOES
-  --------------  ----------------------------------------------
-  Login (GET)     Opens the login page.
-                  Checks if a cookie exists and pre-fills name.
-
-  Login (POST)    Receives form data (username + checkbox).
-                  Saves username to Session.
-                  If "Remember Me" checked, saves a 7-day Cookie.
-                  Redirects to Welcome page.
-
-  Welcome         Reads username from Session.
-                  Displays "Hello [name]" or "Session Expired".
-                  Shows a Logout link.
-
-  Logout          Clears the Session.
-                  Redirects back to Login page.
-
 
 ================================================================
 EXPECTED OUTPUT
@@ -269,14 +224,3 @@ EXPECTED OUTPUT
       (because the cookie remembered the username for 7 days)
 
 
-================================================================
-QUICK SUMMARY - STEPS AT A GLANCE
-================================================================
-
-  1.  Create MVC project      >  Empty MVC template
-  2.  Add AccountController   >  4 action methods
-  3.  Add Login.cshtml        >  Views > Account folder
-  4.  Add Welcome.cshtml      >  Views > Account folder
-  5.  Run the project         >  Test login, session, cookie, logout
-
-================================================================

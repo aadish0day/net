@@ -3,21 +3,6 @@
   A Beginner-Friendly Step-by-Step Guide
 ========================================================
 
-WHAT IS FORM VALIDATION?
---------------------------
-When a user fills out a form on a website, validation is the
-process of checking that the data they entered is correct and
-complete before it gets saved or processed.
-
-Examples of validation:
-  - Making sure the Name field is not left blank
-  - Making sure the Email field looks like a real email address
-  - Making sure the user picked an option from a dropdown
-
-ASP.NET MVC has built-in tools to handle all of this
-automatically using something called Data Annotations --
-labels you add to your Model that define the rules.
-
 
 ========================================================
 WHAT WE ARE BUILDING

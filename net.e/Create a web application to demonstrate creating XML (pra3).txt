@@ -181,14 +181,6 @@ protected void Button1_Click(object sender, EventArgs e)
 
 -----------------------------------------------
 
-  WHAT THIS CODE DOES:
-  - DataSet ds         = Creates an empty table in memory
-  - ds.ReadXml(...)    = Reads data from the XML file
-  - Server.MapPath()   = Gets the correct file path on the server
-  - DataSource         = Connects the GridView to the data
-  - DataBind()         = Loads and displays the data in the grid
-
-
 ================================================================
 PART 6 : RUN THE APPLICATION
 ================================================================
@@ -202,33 +194,3 @@ PART 6 : RUN THE APPLICATION
   Step 4.  The GridView will display all 3 students
            from the XML file in a table format
 
-
-================================================================
-EXPECTED OUTPUT (Table on Screen)
-================================================================
-
-  +------------+-----------+-----------+---------+-----------+-------+
-  | First Name | Last Name | Stream    | Course  | UID       | Class |
-  +------------+-----------+-----------+---------+-----------+-------+
-  | Aadish     | Das       | Science   | BSc I.T | 24BIT044  | SYIT  |
-  | Amit       | Sharma    | Commerce  | BCom    | 24BCOM021 | SYCOM |
-  | Pooja      | Patel     | Arts      | BA      | 24BA013   | SYBA  |
-  +------------+-----------+-----------+---------+-----------+-------+
-
-
-================================================================
-QUICK SUMMARY - STEPS AT A GLANCE
-================================================================
-
-  1. Create project      >  ASP.NET Web App (C#) > Empty
-  2. Add XML file        >  Practical3XML1.xml
-  3. Enter student data  >  3 students with 6 fields each
-  4. Add Web Form        >  WebForm1.aspx
-  5. Add Button          >  Toolbox > Button
-  6. Add GridView        >  Toolbox > GridView
-  7. Set AutoGenerateColumns = False
-  8. Add BoundField columns (firstname, lastname, etc.)
-  9. Write code-behind   >  ReadXml + DataBind
-  10. Run with F5        >  Click button to see table
-
-================================================================

@@ -3,20 +3,6 @@
   A Beginner-Friendly Step-by-Step Guide
 ========================================================
 
-WHAT IS A RAZOR VIEW?
------------------------
-A Razor View is a webpage file (.cshtml) that mixes regular
-HTML with C# code. The "@" symbol is the key -- whenever you
-see "@" in a .cshtml file, it means C# code is running there.
-
-Razor Views live inside the "Views" folder of your project
-and are responsible for what the user actually sees on screen.
-
-The pattern in ASP.NET MVC always follows three steps:
-  1. The Controller receives the user's request
-  2. The Controller prepares any data needed
-  3. The View displays that data as HTML
-
 
 ========================================================
 QUESTION 1 -- DISPLAY A WELCOME MESSAGE

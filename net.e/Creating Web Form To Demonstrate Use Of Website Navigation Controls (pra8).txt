@@ -155,18 +155,3 @@ EXPECTED OUTPUT
   Clicking TYIT  -->  Opens TYIT.aspx  -->  Shows "HELLO WELCOME TO TYIT"
 
 
-================================================================
-QUICK SUMMARY - STEPS AT A GLANCE
-================================================================
-
-  1.  Create project         >  ASP.NET Web App > Empty
-  2.  Add 3 Web Forms        >  SYIT.aspx, TYIT.aspx, TreeDemo.aspx
-  3.  Add welcome message    >  <h1> tag in SYIT and TYIT
-  4.  Open TreeDemo.aspx     >  Design View
-  5.  Drag TreeView          >  From Toolbox > Navigation
-  6.  Auto Format            >  XP File Explorer style
-  7.  Edit Nodes             >  Add SYIT and TYIT as root nodes
-  8.  Set NavigateUrl        >  ~/SYIT.aspx and ~/TYIT.aspx
-  9.  Run TreeDemo.aspx      >  Click links to navigate
-
-================================================================

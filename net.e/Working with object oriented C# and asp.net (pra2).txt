@@ -3,21 +3,6 @@
   A Beginner-Friendly Step-by-Step Guide
 ========================================================
 
-WHAT IS OBJECT-ORIENTED PROGRAMMING (OOP)?
---------------------------------------------
-OOP is a way of writing programs by organizing code into
-"objects" -- self-contained units that combine data (fields)
-and behaviour (methods) together.
-
-The key OOP ideas covered in this guide:
-
-  Function Overloading     --> Same method name, different parameters
-  Constructor Overloading  --> Same class name, different setup options
-  Interfaces               --> A contract that classes must follow
-  Exception Handling       --> Catching and handling errors gracefully
-  Delegates                --> Variables that store and call methods
-
-
 ========================================================
 PART A -- QUESTION 1: FUNCTION OVERLOADING
 ========================================================
