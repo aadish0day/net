@@ -1,0 +1,164 @@
+# array sort 
+
+class Program
+{
+    static void Main()
+    {
+        int[] arr = { 5, 3, 9, 1, 4 };
+        Array.Sort(arr);
+
+        Console.WriteLine("Sorted Array:");
+        foreach (int n in arr)
+            Console.Write(n + " ");
+    }
+}
+
+
+# array.copy
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int[] arr1 = { 10, 20, 30, 40 };
+        int[] arr2 = new int[arr1.Length];
+
+        Array.Copy(arr1, arr2, arr1.Length);
+
+        Console.WriteLine("Copied Array:");
+        foreach (int n in arr2)
+            Console.Write(n + " ");
+    }
+}
+
+# Aaray.reverse
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int[] arr = { 1, 2, 3, 4, 5 };
+        Array.Reverse(arr);
+
+        Console.WriteLine("Reversed Array:");
+        foreach (int n in arr)
+        {
+            Console.Write(n + " ");
+        }
+
+        // --- ADD THIS LINE BELOW ---
+        Console.ReadKey();
+    }
+}
+
+# Array.indexof
+
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int[] arr = { 8, 3, 6, 9, 2 };
+
+        // This searches for the value '9' and returns its position (starting from 0)
+        int index = Array.IndexOf(arr, 9);
+
+        Console.WriteLine("Index of 9: " + index);
+
+        // Keep the window open
+        Console.WriteLine("\nPress any key to exit...");
+        Console.ReadKey();
+    }
+}
+
+# Array.length
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int[] arr = { 12, 14, 16, 18, 20 };
+
+        // arr.Length returns the total number of elements in the array
+        Console.WriteLine("Array Length: " + arr.Length);
+
+        // Keep the window open
+        Console.WriteLine("\nPress any key to exit...");
+        Console.ReadKey();
+    }
+}
+
+
+# Create an array to take array from user and find &amp; display the smaller array
+
+using System;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main()
+        {
+            // First Array Input
+            Console.Write("Enter size of first array: ");
+            int size1 = int.Parse(Console.ReadLine());
+            int[] arr1 = new int[size1];
+
+            Console.WriteLine("Enter elements of first array:");
+            for (int i = 0; i < size1; i++)
+            {
+                arr1[i] = int.Parse(Console.ReadLine());
+            }
+
+            // Second Array Input
+            Console.Write("Enter size of second array: ");
+            int size2 = int.Parse(Console.ReadLine());
+            int[] arr2 = new int[size2];
+
+            Console.WriteLine("Enter elements of second array:");
+            for (int i = 0; i < size2; i++)
+            {
+                arr2[i] = int.Parse(Console.ReadLine());
+            }
+
+            // Comparison Logic
+            Console.WriteLine("\nSmaller array is:");
+
+            if (arr1.Length < arr2.Length)
+            {
+                PrintArray(arr1);
+            }
+            else if (arr2.Length < arr1.Length)
+            {
+                PrintArray(arr2);
+            }
+            else
+            {
+                Console.WriteLine("Both arrays are of equal size.");
+            }
+
+            // To keep the window open in VS 2015
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+        }
+
+        // Helper Method to Print Array
+        static void PrintArray(int[] arr)
+        {
+            foreach (int num in arr)
+            {
+                Console.Write(num + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
+

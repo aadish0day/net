@@ -1,0 +1,680 @@
+========================================================
+  WORKING WITH OBJECT-ORIENTED C# AND ASP.NET
+  A Beginner-Friendly Step-by-Step Guide
+========================================================
+
+WHAT IS OBJECT-ORIENTED PROGRAMMING (OOP)?
+--------------------------------------------
+OOP is a way of writing programs by organizing code into
+"objects" -- self-contained units that combine data (fields)
+and behaviour (methods) together.
+
+The key OOP ideas covered in this guide:
+
+  Function Overloading     --> Same method name, different parameters
+  Constructor Overloading  --> Same class name, different setup options
+  Interfaces               --> A contract that classes must follow
+  Exception Handling       --> Catching and handling errors gracefully
+  Delegates                --> Variables that store and call methods
+
+
+========================================================
+PART A -- QUESTION 1: FUNCTION OVERLOADING
+========================================================
+
+WHAT IS FUNCTION OVERLOADING?
+  When a class has two or more methods with the SAME name
+  but DIFFERENT parameter types or counts, C# automatically
+  calls the correct one based on what you pass in.
+
+  Example: A method called "add" can either:
+    - Add two integers (if you pass two ints)
+    - Join two strings (if you pass two strings)
+
+  This is cleaner than naming them "addNumbers" and
+  "addStrings" separately.
+
+GOAL: Write one "add" method that handles both numbers and
+strings based on what the user enters.
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+
+namespace ConsoleApplication1
+{
+    class prac2
+    {
+        // Version 1: called when two integers are passed
+        public void add(int a, int b)
+        {
+            Console.WriteLine("Addition of two numbers " + a +
+                              " And " + b + " is: " + (a + b));
+        }
+
+        // Version 2: called when two strings are passed
+        public void add(string a, string b)
+        {
+            Console.WriteLine("Concatenation of two strings " + a +
+                              " And " + b + " is: " + (a + b));
+        }
+
+        static void Main(string[] args)
+        {
+            prac2 obj1 = new prac2();
+
+            // --- Integer input with safety check ---
+            Console.WriteLine("Enter 2 Numbers: ");
+            int num1, num2;
+
+            // int.TryParse tries to convert input to int
+            // If the user types letters, it returns false and we ask again
+            while (!int.TryParse(Console.ReadLine(), out num1))
+                { Console.Write("Invalid! Enter first number again: "); }
+
+            while (!int.TryParse(Console.ReadLine(), out num2))
+                { Console.Write("Invalid! Enter second number again: "); }
+
+            // --- String input (strings can't crash, any text is valid) ---
+            Console.WriteLine("\nEnter 2 Strings: ");
+            string str1 = Console.ReadLine();
+            string str2 = Console.ReadLine();
+
+            // --- Display results ---
+            Console.WriteLine("\n--- Results ---");
+            obj1.add(num1, num2);   // Calls Version 1 (integers)
+            obj1.add(str1, str2);   // Calls Version 2 (strings)
+
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  Two methods named "add" exist side by side.
+  C# decides which one to call based on the argument types:
+    obj1.add(num1, num2)  --> num1 and num2 are ints, so
+                             Version 1 (int, int) is called
+    obj1.add(str1, str2)  --> str1 and str2 are strings, so
+                             Version 2 (string, string) is called
+
+  int.TryParse(Console.ReadLine(), out num1)
+    --> Safely tries to convert whatever the user typed into
+        an integer. If it fails (e.g., user typed "abc"),
+        the while loop repeats and asks again.
+        The "out num1" part stores the converted value
+        directly into num1 if conversion succeeds.
+
+SAMPLE OUTPUT:
+  Enter 2 Numbers:
+  5
+  3
+  Enter 2 Strings:
+  Hello
+  World
+
+  --- Results ---
+  Addition of two numbers 5 And 3 is: 8
+  Concatenation of two strings Hello And World is: HelloWorld
+
+
+========================================================
+PART A -- QUESTION 2: CONSTRUCTOR OVERLOADING
+========================================================
+
+WHAT IS A CONSTRUCTOR?
+  A constructor is a special method that runs automatically
+  the moment you create a new object with "new ClassName()".
+  It is used to set up the object's initial state.
+
+WHAT IS CONSTRUCTOR OVERLOADING?
+  Just like methods, constructors can also be overloaded.
+  You define multiple constructors with different parameter
+  types. C# calls the matching one based on what you pass
+  when creating the object.
+
+GOAL: A class called "Swap" that can swap two integers OR
+two floating-point numbers, depending on what is passed in.
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+
+namespace Practical2
+{
+    class Swap
+    {
+        // Constructor 1: runs when two integers are passed
+        public Swap(int n, int m)
+        {
+            Console.WriteLine("Before swap: " + n + " " + m);
+            int t;       // Temporary variable to hold a value
+            t = n;       // Save n in t
+            n = m;       // Overwrite n with m
+            m = t;       // Overwrite m with saved n
+            Console.WriteLine("After swap: " + n + " " + m);
+        }
+
+        // Constructor 2: runs when two doubles are passed
+        public Swap(double f1, double f2)
+        {
+            Console.WriteLine("Before swap: " + f1 + " " + f2);
+            double f;
+            f  = f1;
+            f1 = f2;
+            f2 = f;
+            Console.WriteLine("After swap: " + f1 + " " + f2);
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] ar)
+        {
+            // Integer input
+            Console.Write("Enter 2 integers: ");
+            int num1 = Convert.ToInt32(Console.ReadLine());
+            int num2 = Convert.ToInt32(Console.ReadLine());
+
+            // Double input
+            Console.Write("Enter 2 double numbers: ");
+            double no1 = Convert.ToDouble(Console.ReadLine());
+            double no2 = Convert.ToDouble(Console.ReadLine());
+
+            // Creating obj1 with ints --> triggers Constructor 1
+            Swap obj1 = new Swap(num1, num2);
+
+            // Creating obj2 with doubles --> triggers Constructor 2
+            Swap obj2 = new Swap(no1, no2);
+
+            Console.Read();
+        }
+    }
+}
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  The swap uses a temporary variable "t" (or "f"):
+    t  = n;   --> Save the value of n somewhere safe
+    n  = m;   --> Now n gets overwritten with m's value
+    m  = t;   --> m gets the original value of n from t
+  Without t, overwriting n first would lose its value forever.
+
+  new Swap(num1, num2)
+    --> num1 and num2 are ints, so Constructor 1 runs.
+
+  new Swap(no1, no2)
+    --> no1 and no2 are doubles, so Constructor 2 runs.
+
+SAMPLE OUTPUT:
+  Enter 2 integers:
+  4
+  9
+  Enter 2 double numbers:
+  1.5
+  3.7
+
+  Before swap: 4 9
+  After swap: 9 4
+  Before swap: 1.5 3.7
+  After swap: 3.7 1.5
+
+
+========================================================
+PART A -- QUESTION 3: HIERARCHICAL INHERITANCE / INTERFACE
+========================================================
+
+WHAT IS AN INTERFACE?
+  An interface is a contract. It says: "Any class that
+  implements me MUST provide these methods."
+
+  It defines WHAT must be done but NOT HOW.
+  Each class that implements the interface provides its
+  own version of the method.
+
+WHAT IS HIERARCHICAL INHERITANCE VIA INTERFACE?
+  When multiple classes (Rectangle, Circle) all implement
+  the same interface (Drawable), they share a common
+  "parent contract" but each has its own behaviour.
+  This is one form of hierarchical inheritance.
+
+GOAL: Both Rectangle and Circle must have a draw() method,
+but each draws differently.
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+
+namespace Practical_3
+{
+    // Interface: declares what methods classes MUST have
+    interface Drawable
+    {
+        void draw();
+    }
+
+    // Rectangle agrees to the contract and provides its draw()
+    public class Rectangle : Drawable
+    {
+        public void draw()
+        {
+            Console.WriteLine("Drawing rectangle...");
+        }
+    }
+
+    // Circle agrees to the contract and provides its draw()
+    public class Circle : Drawable
+    {
+        public void draw()
+        {
+            Console.WriteLine("Drawing circle...");
+        }
+    }
+
+    public class a_3
+    {
+        static void Main(string[] args)
+        {
+            // 'd' is of type Drawable (the interface)
+            // It can point to ANY class that implements Drawable
+            Drawable d = new Rectangle();
+            d.draw();   // Calls Rectangle's draw()
+
+            d = new Circle();
+            d.draw();   // Calls Circle's draw()
+
+            Console.Read();
+        }
+    }
+}
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  interface Drawable { void draw(); }
+    --> Declares that any class using ": Drawable" must
+        have a method called draw() that returns nothing (void).
+
+  public class Rectangle : Drawable
+    --> The colon means "Rectangle implements Drawable."
+        Rectangle is now legally a Drawable type.
+
+  Drawable d = new Rectangle();
+    --> Even though d is declared as type Drawable,
+        it currently holds a Rectangle object.
+        Calling d.draw() runs Rectangle's version.
+
+  d = new Circle();
+    --> Now d points to a Circle object.
+        Calling d.draw() runs Circle's version.
+
+  This is called POLYMORPHISM -- one variable (d) can
+  behave differently depending on which object it holds.
+
+SAMPLE OUTPUT:
+  Drawing rectangle...
+  Drawing circle...
+
+
+========================================================
+PART B -- QUESTION 1: EXCEPTION HANDLING
+========================================================
+
+WHAT IS EXCEPTION HANDLING?
+  An exception is an error that occurs while a program
+  is running (not a bug in your logic, but an unexpected
+  situation). Exception handling lets your program catch
+  that error and respond gracefully instead of crashing.
+
+  try     --> Put the risky code here
+  throw   --> Manually trigger an exception when something is wrong
+  catch   --> Handle the error if it occurs
+
+WHAT IS A CUSTOM EXCEPTION?
+  C# comes with built-in exceptions (like FormatException
+  when you type letters into a number field). But you can
+  also create your OWN exception class for specific situations.
+
+GOAL: Accept a number from the user. If the number is odd,
+throw a custom exception called NotEvenException.
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+
+namespace Practical_3
+{
+    // Custom exception class
+    // It inherits from the built-in Exception class
+    public class NotEvenException : Exception
+    {
+        // Constructor passes the error message up to Exception
+        public NotEvenException(string message) : base(message)
+        {
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] ar)
+        {
+            int num;
+
+            try
+            {
+                Console.Write("Enter a number: ");
+                num = int.Parse(Console.ReadLine());
+
+                // Check if the number is odd (remainder when divided by 2 is not 0)
+                if (num % 2 != 0)
+                {
+                    // Manually create and throw our custom exception
+                    throw new NotEvenException("Not an even number");
+                }
+                else
+                {
+                    Console.WriteLine("It is an even number");
+                }
+            }
+            catch (NotEvenException e)
+            {
+                // Catches our custom exception and shows its message
+                Console.WriteLine(e.Message);
+            }
+            catch (FormatException)
+            {
+                // Catches the error if user types "abc" instead of a number
+                Console.WriteLine("Error: Please enter a valid numeric value.");
+            }
+
+            Console.Read();
+        }
+    }
+}
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  public class NotEvenException : Exception
+    --> Creates a custom exception type by inheriting from
+        the built-in Exception class. This means our class
+        gets all of Exception's features automatically.
+
+  : base(message)
+    --> Passes our error message to the parent Exception
+        class so it is stored and accessible via e.Message.
+
+  num % 2 != 0
+    --> The % operator gives the remainder of division.
+        If a number divided by 2 has a remainder, it's odd.
+        5 % 2 = 1 (odd), 4 % 2 = 0 (even).
+
+  throw new NotEvenException("Not an even number")
+    --> Manually triggers our custom exception.
+        Program execution immediately jumps to the
+        matching catch block.
+
+  Two catch blocks handle two different errors:
+    - NotEvenException: our custom error (odd number)
+    - FormatException: user typed text instead of a number
+
+SAMPLE OUTPUT (odd number):
+  Enter a number: 7
+  Not an even number
+
+SAMPLE OUTPUT (even number):
+  Enter a number: 4
+  It is an even number
+
+
+========================================================
+PART B -- QUESTION 2: DELEGATES
+========================================================
+
+WHAT IS A DELEGATE?
+  A delegate is a variable that holds a reference to a
+  method (function). Instead of calling a method directly,
+  you store it in a delegate variable and call it through
+  that variable later.
+
+  Think of it like a remote control -- the delegate is
+  the remote, and the methods are the buttons it can press.
+
+  Delegates are useful when you want to decide WHICH method
+  to call at runtime, or store a list of methods to execute.
+
+----------------------------------------------
+VERSION 1: WITHOUT USER INPUT (fixed values)
+----------------------------------------------
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+
+namespace Practical_2
+{
+    // Declare the delegate type
+    // This means: any method with no parameters and no return value
+    // can be stored in an AddDel variable
+    public delegate void AddDel();
+
+    class Addition
+    {
+        // Fixed values used in calculations
+        int a = 10, b = 20;
+        float x = 5.628f, y = 2.9812f;
+        string s1 = "Rahul ", s2 = "Jat";
+
+        // Array of 3 delegate slots -- one for each method
+        AddDel[] addOps = new AddDel[3];
+
+        public void AddInt()
+        {
+            Console.WriteLine("Addition of Integers: " + (a + b));
+        }
+
+        public void AddFloat()
+        {
+            Console.WriteLine("Addition of Floats: " + (x + y));
+        }
+
+        public void AddString()
+        {
+            Console.WriteLine("Addition of Strings: " + (s1 + s2));
+        }
+
+        // Stores each method into a delegate slot
+        public void Assign_operations()
+        {
+            addOps[0] = new AddDel(AddInt);
+            addOps[1] = new AddDel(AddFloat);
+            addOps[2] = new AddDel(AddString);
+        }
+
+        // Calls each method through the delegate
+        public void Display()
+        {
+            addOps[0]();   // Calls AddInt
+            addOps[1]();   // Calls AddFloat
+            addOps[2]();   // Calls AddString
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Addition A = new Addition();
+            A.Assign_operations();  // Load methods into delegates
+            A.Display();            // Execute all three
+
+            Console.Read();
+        }
+    }
+}
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  public delegate void AddDel();
+    --> Declares a new delegate TYPE named AddDel.
+        Any method that takes no arguments and returns
+        nothing (void) can be stored in an AddDel variable.
+
+  AddDel[] addOps = new AddDel[3];
+    --> An array of 3 delegate slots, like 3 remotes.
+
+  addOps[0] = new AddDel(AddInt);
+    --> Stores the AddInt method into slot 0.
+        AddInt is not being called here -- just stored.
+
+  addOps[0]();
+    --> NOW it calls the method stored in slot 0 (AddInt).
+
+SAMPLE OUTPUT:
+  Addition of Integers: 30
+  Addition of Floats: 8.6092
+  Addition of Strings: Rahul Jat
+
+----------------------------------------------
+VERSION 2: WITH USER INPUT
+----------------------------------------------
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+
+namespace Practical_2
+{
+    public delegate void AddDel();
+
+    class Addition
+    {
+        int a, b;
+        float x, y;
+        string s1, s2;
+
+        AddDel[] addOps = new AddDel[3];
+
+        // Constructor collects all input from the user
+        public Addition()
+        {
+            // Safe integer input
+            Console.Write("Enter first integer: ");
+            while (!int.TryParse(Console.ReadLine(), out a))
+                Console.Write("Invalid! Enter first integer again: ");
+
+            Console.Write("Enter second integer: ");
+            while (!int.TryParse(Console.ReadLine(), out b))
+                Console.Write("Invalid! Enter second integer again: ");
+
+            // Safe float input
+            Console.Write("Enter first float: ");
+            while (!float.TryParse(Console.ReadLine(), out x))
+                Console.Write("Invalid! Use a dot (.) for decimals. Try again: ");
+
+            Console.Write("Enter second float: ");
+            while (!float.TryParse(Console.ReadLine(), out y))
+                Console.Write("Invalid! Enter second float again: ");
+
+            // String input (any text is valid, no crash risk)
+            Console.Write("Enter first string: ");
+            s1 = Console.ReadLine();
+
+            Console.Write("Enter second string: ");
+            s2 = Console.ReadLine();
+        }
+
+        public void AddInt()
+        {
+            Console.WriteLine("Addition of Integers: " + (a + b));
+        }
+
+        public void AddFloat()
+        {
+            Console.WriteLine("Addition of Floats: " + (x + y));
+        }
+
+        public void AddString()
+        {
+            Console.WriteLine("Addition of Strings: " + (s1 + s2));
+        }
+
+        public void Assign_operations()
+        {
+            addOps[0] = new AddDel(AddInt);
+            addOps[1] = new AddDel(AddFloat);
+            addOps[2] = new AddDel(AddString);
+        }
+
+        public void Display()
+        {
+            Console.WriteLine("\n--- Results ---");
+            addOps[0]();
+            addOps[1]();
+            addOps[2]();
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // new Addition() triggers the constructor, which collects input
+            Addition A = new Addition();
+            A.Assign_operations();
+            A.Display();
+
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}
+----------------------------------------------------------
+
+KEY DIFFERENCE FROM VERSION 1:
+  The fields (a, b, x, y, s1, s2) have no default values.
+  Instead, the constructor collects them from the user.
+  The while + TryParse loops keep asking until valid input
+  is given, preventing crashes from bad input.
+
+SAMPLE OUTPUT:
+  Enter first integer: 5
+  Enter second integer: 3
+  Enter first float: 1.5
+  Enter second float: 2.5
+  Enter first string: Hello
+  Enter second string: World
+
+  --- Results ---
+  Addition of Integers: 8
+  Addition of Floats: 4
+  Addition of Strings: HelloWorld
+
+
+========================================================
+QUICK REFERENCE: KEY CONCEPTS
+========================================================
+
+  CONCEPT                MEANING
+  --------------------   -----------------------------------------
+  Method Overloading     Same method name, different parameter types
+  Constructor Overloading  Same class, multiple constructors
+  Interface              A contract -- classes MUST implement listed methods
+  Polymorphism           One variable behaving differently based on object type
+  Exception              An error that occurs at runtime
+  try / catch / throw    Blocks for handling runtime errors
+  Custom Exception       A user-defined error class inheriting from Exception
+  Delegate               A variable that stores and calls a method
+  int.TryParse           Safely converts text to int without crashing
+  num % 2                Remainder of dividing num by 2 (0 = even, 1 = odd)
+  : base(message)        Passes data up to the parent class constructor
+
+
+========================================================
+END OF GUIDE
+========================================================

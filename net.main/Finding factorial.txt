@@ -1,0 +1,31 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Console.Write("Enter a number: ");
+            // Use long to support factorials up to 20!
+            long n = Convert.ToInt64(Console.ReadLine());
+
+            long fact = 1;
+
+            for (int i = 1; i <= n; i++)
+            {
+                fact *= i;
+            }
+
+            Console.WriteLine($"Factorial of {n} = {fact}");
+
+            // FIX: This keeps the console window open so you can read the result
+            Console.WriteLine("\nCalculation complete. Press any key to exit.");
+            Console.ReadKey();
+        }
+    }
+}

@@ -1,0 +1,172 @@
+================================================================
+     PRACTICAL 8 - WEBSITE NAVIGATION CONTROLS (TREEVIEW)
+================================================================
+
+
+----------------------------------------------------------------
+OBJECTIVE
+----------------------------------------------------------------
+Create an ASP.NET Web Application that uses a TreeView
+navigation control to link between multiple web pages.
+
+
+================================================================
+STEP 1 : PROJECT SETUP
+================================================================
+
+  1.  Open Visual Studio
+
+  2.  Go to:
+      File > New > Project
+
+  3.  Select:
+      ASP.NET Web Application (.NET Framework)
+
+  4.  Choose template:
+      Empty
+      (Do NOT select MVC)
+
+  5.  Click Create
+
+
+================================================================
+STEP 2 : CREATE THE THREE WEB FORMS
+================================================================
+
+  For each form below, follow these steps:
+  Right-click project in Solution Explorer
+  > Add > New Item > Web > Web Form
+
+  Create these 3 files:
+
+      1.  SYIT.aspx
+      2.  TYIT.aspx
+      3.  TreeDemo.aspx
+
+
+================================================================
+STEP 3 : DESIGN THE CONTENT PAGES
+================================================================
+
+  These pages show a welcome message when navigated to.
+
+
+-------- PASTE INTO SYIT.aspx (inside <body>) --------
+
+<body>
+    <form id="form1" runat="server">
+        <h1>HELLO WELCOME TO SYIT</h1>
+    </form>
+</body>
+
+------------------------------------------------------
+
+
+-------- PASTE INTO TYIT.aspx (inside <body>) --------
+
+<body>
+    <form id="form1" runat="server">
+        <h1>HELLO WELCOME TO TYIT</h1>
+    </form>
+</body>
+
+------------------------------------------------------
+
+
+================================================================
+STEP 4 : SET UP THE TREEVIEW NAVIGATION (TreeDemo.aspx)
+================================================================
+
+  Step 1.  Open TreeDemo.aspx in Design View
+
+  Step 2.  Open the Toolbox panel (left side)
+
+  Step 3.  Find the Navigation section in the Toolbox
+
+  Step 4.  Drag and drop the TreeView control onto the page
+
+  Step 5.  Click the small arrow ( > ) on the top-right
+           corner of the TreeView control
+
+  Step 6.  Click "Auto Format"
+             - Select scheme:  XP File Explorer
+             - Click OK
+
+  Step 7.  Click the small arrow again
+
+  Step 8.  Click "Edit Nodes"
+           The TreeView Node Editor will open
+
+  ---- ADD NODE 1 ----
+
+  Step 9.  Click "Add a root node" (the top icon)
+
+  Step 10. In the Properties panel on the right, set:
+             Text        =  SYIT
+             NavigateUrl =  ~/SYIT.aspx
+
+  ---- ADD NODE 2 ----
+
+  Step 11. Click "Add a root node" again
+
+  Step 12. Set:
+             Text        =  TYIT
+             NavigateUrl =  ~/TYIT.aspx
+
+  Step 13. Click OK
+
+
+================================================================
+FOLDER STRUCTURE
+================================================================
+
+  Project Root/
+     |
+     |-- SYIT.aspx          (Content Page - SYIT welcome)
+     |-- TYIT.aspx          (Content Page - TYIT welcome)
+     |-- TreeDemo.aspx      (Navigation Page - TreeView)
+
+
+================================================================
+HOW IT WORKS
+================================================================
+
+  File            Role
+  --------------- -----------------------------------------------
+  TreeDemo.aspx   Main page - shows the TreeView navigation menu
+  SYIT.aspx       Target page - opens when SYIT is clicked
+  TYIT.aspx       Target page - opens when TYIT is clicked
+
+  NavigateUrl     Tells the link where to go when clicked
+  ~/              Means "start from the project root folder"
+
+
+================================================================
+EXPECTED OUTPUT
+================================================================
+
+  When you run TreeDemo.aspx, you will see:
+
+      [ TreeView Menu ]
+        > SYIT
+        > TYIT
+
+  Clicking SYIT  -->  Opens SYIT.aspx  -->  Shows "HELLO WELCOME TO SYIT"
+  Clicking TYIT  -->  Opens TYIT.aspx  -->  Shows "HELLO WELCOME TO TYIT"
+
+
+================================================================
+QUICK SUMMARY - STEPS AT A GLANCE
+================================================================
+
+  1.  Create project         >  ASP.NET Web App > Empty
+  2.  Add 3 Web Forms        >  SYIT.aspx, TYIT.aspx, TreeDemo.aspx
+  3.  Add welcome message    >  <h1> tag in SYIT and TYIT
+  4.  Open TreeDemo.aspx     >  Design View
+  5.  Drag TreeView          >  From Toolbox > Navigation
+  6.  Auto Format            >  XP File Explorer style
+  7.  Edit Nodes             >  Add SYIT and TYIT as root nodes
+  8.  Set NavigateUrl        >  ~/SYIT.aspx and ~/TYIT.aspx
+  9.  Run TreeDemo.aspx      >  Click links to navigate
+
+================================================================

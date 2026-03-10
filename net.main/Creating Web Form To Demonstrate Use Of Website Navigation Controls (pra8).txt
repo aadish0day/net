@@ -1,0 +1,68 @@
+Practical 8: Website Navigation Controls
+========================================
+
+STEP 1: PROJECT SETUP
+---------------------
+1. Open Visual Studio.
+2. Create a new ASP.NET Web Application (.NET Framework).
+3. Select the Empty template (do not select MVC).
+
+
+STEP 2: CREATE THE WEB FORMS
+-----------------------------
+Right-click your project in Solution Explorer and add three Web Forms:
+  1. SYIT.aspx
+  2. TYIT.aspx
+  3. TreeDemo.aspx
+
+
+STEP 3: DESIGN THE CONTENT PAGES (SYIT & TYIT)
+------------------------------------------------
+Enter the following code into your target pages to display the welcome messages.
+
+--- SYIT.aspx ---
+
+<body>
+    <form id="form1" runat="server">
+        <h1>HELLO WELCOME TO SYIT</h1>
+    </form>
+</body>
+
+--- TYIT.aspx ---
+
+<body>
+    <form id="form1" runat="server">
+        <h1>HELLO WELCOME TO TYIT</h1>
+    </form>
+</body>
+
+
+STEP 4: CONFIGURE NAVIGATION (TreeDemo.aspx)
+---------------------------------------------
+1. Open TreeDemo.aspx in Design View.
+2. Drag and drop the TreeView control from the Navigation section of the Toolbox.
+3. Click the smart tag (small arrow) on the control and select Auto Format.
+4. Choose the XP File Explorer scheme and click OK.
+5. Select Edit Nodes from the smart tag menu.
+6. Add SYIT Node:
+      - Click "Add a root node"
+      - Set Text to: SYIT
+      - Set NavigateUrl to: ~/SYIT.aspx
+7. Add TYIT Node:
+      - Click "Add a root node"
+      - Set Text to: TYIT
+      - Set NavigateUrl to: ~/TYIT.aspx
+
+
+FOLDER STRUCTURE
+----------------
+Project Root
+  |-- SYIT.aspx       (Content Page)
+  |-- TYIT.aspx       (Content Page)
+  |-- TreeDemo.aspx   (Navigation Page)
+
+
+FINAL OUTPUT
+------------
+When you run TreeDemo.aspx, clicking the SYIT or TYIT links
+in the tree will navigate you to the respective welcome pages.

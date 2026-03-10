@@ -1,0 +1,261 @@
+
+Q1) Display a welcome message through razor view (Views>Index>Index.schtml)
+In this question well first make a controller named as index then well make a view to display
+Code:
+
+# Index.cshtml(View)
+
+@{
+    ViewBag.Title = "Welcome";
+}
+
+<h1>Welcome Page</h1>
+
+@{
+    var Title = "Welcome to Razor Syntax!";
+    var weekDay = DateTime.Now.DayOfWeek;
+    var HomeMessage = Title + " Today is: " + weekDay;
+}
+
+<p>Razor Message: @HomeMessage</p>
+
+# Controller:
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication5.Controllers
+{
+    public class IndexController : Controller
+    {
+        // GET: Index
+        public ActionResult Index()
+        {
+            // This simply tells the application to look for a file 
+            // named Index.cshtml inside the Views/Index folder.
+            return View();
+        }
+    }
+}
+
+
+**Project Root**
+├── **Controllers**
+│   └── ➔ `IndexController.cs`
+├── **fonts**
+├── **Models**
+├── **Scripts**
+└── **Views**
+	└── **Index**
+		└── ➔ `Index.cshtml`
+
+
+
+Q2) Write a razor code to display the numbers between 0 to 10
+Code:
+
+In one controller only we can make multiple views so here the new view to display numbers we are making in same controller only
+
+# View code (DisplayNumbers)
+
+@{
+    ViewBag.Title = "DisplayNumbers";
+}
+
+<h2>Display Numbers between 1 to 10</h2>
+
+@{
+    for (int i = 0; i <= 10; i++)
+    {
+        <p>Current Number Is: @i</p>
+    }
+}
+
+# Controller Code(IndexController):
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication5.Controllers
+{
+    public class IndexController : Controller
+    {
+        // GET: Index
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: DisplayNumbers
+        public ActionResult DisplayNumbers()
+        {
+            // This returns the DisplayNumbers.cshtml view
+            return View();
+        }
+    }
+}
+
+Q4) Display values of an array in a view
+So here we created a new view to display the array but the controller is same
+
+# My_array.cshtml(View Code):
+
+@model string[]
+@{
+    ViewBag.Title = "my_array";
+}
+
+<h2>This is the list of courses in syit: </h2>
+
+@foreach(string cname in Model)
+{
+    <h2>@cname</h2>
+}
+
+# Controller Code(IndexController.cs)
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication5.Controllers
+{
+    public class IndexController : Controller
+    {
+        // GET: Index
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: DisplayNumbers
+        public ActionResult DisplayNumbers()
+        {
+            return View();
+        }
+
+        // GET: my_array
+        public ActionResult my_array()
+        {
+            // Creating a string array of courses
+            string[] courses = { "FYIT", "SYIT", "TYIT" };
+
+            // Passing the 'courses' array to the View
+            return View(courses);
+        }
+    }
+}
+
+
+
+Q6) Display data in table format
+Here we are creating model view and controller
+So Model Code is:
+# UserModel.cs
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace WebApplication5.Models
+{
+    public class UserModel
+    {
+        // Properties to store movie details
+        public string MovieName { get; set; }
+        public string ReleaseDate { get; set; }
+        public string MovieDuration { get; set; }
+
+        // Constructor to initialize the object easily
+        public UserModel(string moviename, string releasedate, string movieduration)
+        {
+            MovieName = moviename;
+            ReleaseDate = releasedate;
+            MovieDuration = movieduration;
+        }
+    }
+}
+
+Controller Code is:
+# TestController.cs
+
+using WebApplication5.Models; // Calling the namespace of our model class
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication5.Controllers
+{
+    public class TestController : Controller
+    {
+        // GET: Test
+        public ActionResult Index()
+        {
+            // Creating a List to store multiple movie (UserModel) objects
+            List<UserModel> users = new List<UserModel>();
+
+            // Adding movies using the constructor we defined in UserModel.cs
+            users.Add(new UserModel("Captain America: Civil War", "2016", "2"));
+            users.Add(new UserModel("Doctor Strange", "2018", "3"));
+            users.Add(new UserModel("Black Panther", "2019", "2"));
+            users.Add(new UserModel("Avengers Infinity war", "2020", "4"));
+
+            // Passing the 'users' list to the View
+            return View(users);
+        }
+    }
+}
+
+
+View Code is:
+# Index.cshtml
+
+@model IEnumerable<WebApplication5.Models.UserModel>
+@{
+    Layout = null;
+}
+
+<body>
+    <div>
+        @Html.Label("Welcome to test controller", new { @class = "label" })
+        @Html.Label("This is list of users", new { @class = "label" })
+
+        <table border="1">
+            <tr>
+                <th>Movie Name</th>
+                <th>Release Date</th>
+                <th>Movie Duration</th>
+            </tr>
+
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => u.MovieName)</td>
+                    <td>@Html.DisplayFor(modelItem => u.ReleaseDate)</td>
+                    <td>@Html.DisplayFor(modelItem => u.MovieDuration)</td>
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+
+Project Root
+├── Controllers
+│   └── ➔ TestController.cs (Creates the List)
+├── Models
+│   └── ➔ UserModel.cs (Defines the Movie data)
+└── Views
+└── Test
+└── ➔ Index.cshtml (Displays the Table)
+

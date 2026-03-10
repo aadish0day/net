@@ -1,0 +1,389 @@
+
+    1. Function Overloading
+Write a program which has 2 methods “add” which can either add 2 numbers or concatenate 2 strings which are taken as input from the user and display the output.
+Code:
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication1
+{
+    class prac2
+    {
+        public void add(int a, int b)
+        {
+            Console.WriteLine("Addition of two numbers " + a + " And " + b + " is: " + (a + b));
+        }
+
+        public void add(string a, string b)
+        {
+            Console.WriteLine("Concatenation of two strings " + a + " And " + b + " is: " + (a + b));
+        }
+
+        static void Main(string[] args)
+        {
+            prac2 obj1 = new prac2();
+
+            // Safety for Number Input
+            Console.WriteLine("Enter 2 Numbers: ");
+            int num1, num2;
+
+            while (!int.TryParse(Console.ReadLine(), out num1)) 
+                { Console.Write("Invalid! Enter first number again: "); }
+
+            while (!int.TryParse(Console.ReadLine(), out num2)) 
+                { Console.Write("Invalid! Enter second number again: "); }
+
+            // String Input
+            Console.WriteLine("\nEnter 2 Strings: ");
+            string str1 = Console.ReadLine();
+            string str2 = Console.ReadLine();
+
+            Console.WriteLine("\n--- Results ---");
+            obj1.add(num1, num2);
+            obj1.add(str1, str2);
+
+            // Keeps the window open until you press a key
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}
+
+
+    2. Constructor Overloading
+Write a C# program which has 2 constructors w hich can swap two integers or two floating numbers which are taken as input from the user and display the output
+Code:
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Practical2
+{
+    class Swap
+    {
+        // Constructor for swapping two integers
+        public Swap(int n, int m)
+        {
+            Console.WriteLine("Before swap: " + n + " " + m);
+            int t;
+            t = n;
+            n = m;
+            m = t;
+            Console.WriteLine("After swap: " + n + " " + m);
+        }
+
+        // Constructor for swapping two floating numbers (doubles)
+        public Swap(double f1, double f2)
+        {
+            Console.WriteLine("Before swap: " + f1 + " " + f2);
+            double f;
+            f = f1;
+            f1 = f2;
+            f2 = f;
+            Console.WriteLine("After swap: " + f1 + " " + f2);
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] ar)
+        {
+            // Input for Integers
+            Console.Write("Enter 2 integers: ");
+            int num1 = Convert.ToInt32(Console.ReadLine());
+            int num2 = Convert.ToInt32(Console.ReadLine());
+
+            // Input for Double/Floating numbers
+            Console.Write("Enter 2 double numbers: ");
+            double no1 = Convert.ToDouble(Console.ReadLine());
+            double no2 = Convert.ToDouble(Console.ReadLine());
+
+            // Creating objects triggers the respective constructors
+            Swap obj1 = new Swap(num1, num2);
+            Swap obj2 = new Swap(no1, no2);
+
+            // Keep the console window open
+            Console.Read();
+        }
+    }
+}
+
+
+    3. Hierarchical Inheritance/interface
+Code:
+
+using System;
+
+namespace Practical_3
+{
+    // Interface definition
+    interface Drawable
+    {
+        void draw();
+    }
+
+    // Rectangle class implementing Drawable
+    public class Rectangle : Drawable
+    {
+        public void draw()
+        {
+            Console.WriteLine("Drawing rectangle...");
+        }
+    }
+
+    // Circle class implementing Drawable
+    public class Circle : Drawable
+    {
+        public void draw()
+        {
+            Console.WriteLine("Drawing circle...");
+        }
+    }
+
+    // Main class to run the program
+    public class a_3
+    {
+        static void Main(string[] args)
+        {
+            // Using the interface reference 'd' to point to different objects
+            Drawable d = new Rectangle();
+            d.draw();
+
+            d = new Circle();
+            d.draw();
+
+            // Keep the console window open in VS 2015
+            Console.Read();
+        }
+    }
+}
+
+
+
+
+b. Create a simple application to demonstrate use of the following concepts
+1) Exception Handling
+Q. Write a program to accept a number from the user a throw an exception if the number is not an even number.
+Code:
+Making user defined exception
+
+using System;
+
+namespace Practical_3
+{
+    // Custom Exception Class
+    public class NotEvenException : Exception
+    {
+        public NotEvenException(string message) : base(message)
+        {
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] ar)
+        {
+            int num;
+
+            try
+            {
+                Console.Write("Enter a number: ");
+                num = int.Parse(Console.ReadLine());
+
+                // Check if the number is odd
+                if (num % 2 != 0)
+                {
+                    // Manually trigger the custom exception
+                    throw new NotEvenException("Not an even number");
+                }
+                else
+                {
+                    Console.WriteLine("It is an even number");
+                }
+            }
+            catch (NotEvenException e)
+            {
+                // Catch and display the custom error message
+                Console.WriteLine(e.Message);
+            }
+            catch (FormatException)
+            {
+                // Safety check if user types letters instead of numbers
+                Console.WriteLine("Error: Please enter a valid numeric value.");
+            }
+
+            // Keep the window open in VS 2015
+            Console.Read();
+        }
+    }
+}
+
+
+
+2) Using Delegates and events
+Q) WRITE A PROGRAM FOR ADDITON OF TWO INTEGERS TWO FLOATS AND ADDITON OF TWO STRINGS 
+1)WITHOUT TAKING USER INPUT
+Code:
+
+using System;
+
+namespace Practical_2
+{
+    // Delegate declaration
+    public delegate void AddDel();
+
+    class Addition
+    {
+        // Default values
+        int a = 10, b = 20;
+        float x = 5.628f, y = 2.9812f;
+        string s1 = "Rahul ", s2 = "Jat";
+
+        // Creating array of delegate objects so we can store pointer of each function
+        AddDel[] addOps = new AddDel[3];
+
+        // Integer addition
+        public void AddInt()
+        {
+            Console.WriteLine("Addition of Integers: " + (a + b));
+        }
+
+        // Float addition
+        public void AddFloat()
+        {
+            Console.WriteLine("Addition of Floats: " + (x + y));
+        }
+
+        // String addition
+        public void AddString()
+        {
+            Console.WriteLine("Addition of Strings: " + (s1 + s2));
+        }
+
+        public void Assign_operations()
+        {
+            addOps[0] = new AddDel(AddInt);
+            addOps[1] = new AddDel(AddFloat);
+            addOps[2] = new AddDel(AddString);
+        }
+
+        public void Display()
+        {
+            addOps[0]();
+            addOps[1]();
+            addOps[2]();
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Addition A = new Addition();
+            A.Assign_operations();
+            A.Display();
+
+            // Keeps the console window open in VS 2015
+            Console.Read();
+        }
+    }
+}
+
+
+2) TAKING USER INPUT
+Code:
+
+using System;
+
+namespace Practical_2
+{
+    public delegate void AddDel();
+
+    class Addition
+    {
+        int a, b;
+        float x, y;
+        string s1, s2;
+
+        AddDel[] addOps = new AddDel[3];
+
+        public Addition()
+        {
+            // Safe Integer Input
+            Console.Write("Enter first integer: ");
+            while (!int.TryParse(Console.ReadLine(), out a))
+                Console.Write("Invalid! Enter first integer again: ");
+
+            Console.Write("Enter second integer: ");
+            while (!int.TryParse(Console.ReadLine(), out b))
+                Console.Write("Invalid! Enter second integer again: ");
+
+            // Safe Float Input
+            Console.Write("Enter first float: ");
+            while (!float.TryParse(Console.ReadLine(), out x))
+                Console.Write("Invalid! Use a dot (.) for decimals. Enter first float again: ");
+
+            Console.Write("Enter second float: ");
+            while (!float.TryParse(Console.ReadLine(), out y))
+                Console.Write("Invalid! Enter second float again: ");
+
+            // String Input (Strings don't crash)
+            Console.Write("Enter first string: ");
+            s1 = Console.ReadLine();
+
+            Console.Write("Enter second string: ");
+            s2 = Console.ReadLine();
+        }
+
+        public void AddInt()
+        {
+            Console.WriteLine("Addition of Integers: " + (a + b));
+        }
+
+        public void AddFloat()
+        {
+            Console.WriteLine("Addition of Floats: " + (x + y));
+        }
+
+        public void AddString()
+        {
+            Console.WriteLine("Addition of Strings: " + (s1 + s2));
+        }
+
+        public void Assign_operations()
+        {
+            addOps[0] = new AddDel(AddInt);
+            addOps[1] = new AddDel(AddFloat);
+            addOps[2] = new AddDel(AddString);
+        }
+
+        public void Display()
+        {
+            Console.WriteLine("\n--- Results ---");
+            addOps[0]();
+            addOps[1]();
+            addOps[2]();
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Addition A = new Addition();
+            A.Assign_operations();
+            A.Display();
+
+            // Keeps window open in VS 2015
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}

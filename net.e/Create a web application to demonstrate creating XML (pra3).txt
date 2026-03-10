@@ -1,0 +1,234 @@
+================================================================
+     PRACTICAL 3 - CREATE A WEB APPLICATION TO DEMONSTRATE XML
+================================================================
+
+================================================================
+PART 1 : CREATE THE PROJECT
+================================================================
+
+  Step 1.  Open Visual Studio
+
+  Step 2.  Go to:
+           File > New > Project
+
+  Step 3.  Select:
+           ASP.NET Web Application (C#)
+
+  Step 4.  Name the project:
+           Practical3
+
+  Step 5.  Click Create
+
+  Step 6.  Choose template:
+           Empty
+
+  Step 7.  Click Create
+
+
+================================================================
+PART 2 : CREATE THE XML FILE
+================================================================
+
+  Step 1.  In Solution Explorer, right-click the project name
+
+  Step 2.  Go to:
+           Add > New Item
+
+  Step 3.  Under category, select:
+           Data
+
+  Step 4.  Choose:
+           XML File
+
+  Step 5.  Name the file:
+           Practical3XML1.xml
+
+  Step 6.  Click Add
+
+
+-------- PASTE THIS CODE INTO Practical3XML1.xml --------
+
+<?xml version="1.0" encoding="utf-8"?>
+<students>
+
+  <student>
+    <firstname>Aadish</firstname>
+    <lastname>Das</lastname>
+    <stream>Science</stream>
+    <course>BSc I.T</course>
+    <UID>24BIT044</UID>
+    <class>SYIT</class>
+  </student>
+
+  <student>
+    <firstname>Amit</firstname>
+    <lastname>Sharma</lastname>
+    <stream>Commerce</stream>
+    <course>BCom</course>
+    <UID>24BCOM021</UID>
+    <class>SYCOM</class>
+  </student>
+
+  <student>
+    <firstname>Pooja</firstname>
+    <lastname>Patel</lastname>
+    <stream>Arts</stream>
+    <course>BA</course>
+    <UID>24BA013</UID>
+    <class>SYBA</class>
+  </student>
+
+</students>
+
+---------------------------------------------------------
+
+================================================================
+PART 3 : CREATE THE WEB FORM
+================================================================
+
+  Step 1.  In Solution Explorer, right-click the project name
+
+  Step 2.  Go to:
+           Add > New Item
+
+  Step 3.  Under category, select:
+           Web
+
+  Step 4.  Choose:
+           Web Form
+
+  Step 5.  Name it:
+           WebForm1.aspx
+
+  Step 6.  Click Add
+
+
+================================================================
+PART 4 : DESIGN THE WEB FORM (WebForm1.aspx)
+================================================================
+
+  Step 1.  Open WebForm1.aspx in Design View
+
+  Step 2.  From the Toolbox, drag and drop:
+             - 1 x Button
+             - 1 x GridView
+
+  Step 3.  Click on the GridView
+
+  Step 4.  In the Properties panel (bottom-right):
+             - Find:  AutoGenerateColumns
+             - Set to: False
+
+           WHY: This lets us manually define which columns
+                to show, instead of auto-displaying all fields.
+
+  Step 5.  Click on the small arrow ( > ) on the top-right
+           corner of the GridView
+
+  Step 6.  Click "Edit Columns"
+
+  Step 7.  Add the following BoundField columns:
+
+           Column 1:
+             HeaderText  = First Name
+             DataField   = firstname
+
+           Column 2:
+             HeaderText  = Last Name
+             DataField   = lastname
+
+           Column 3:
+             HeaderText  = Stream
+             DataField   = stream
+
+           Column 4:
+             HeaderText  = Course
+             DataField   = course
+
+           Column 5:
+             HeaderText  = UID
+             DataField   = UID
+
+           Column 6:
+             HeaderText  = Class
+             DataField   = class
+
+  Step 8.  Click OK
+
+
+================================================================
+PART 5 : WRITE THE CODE-BEHIND (WebForm1.aspx.cs)
+================================================================
+
+  Step 1.  Double-click the Button to open the code-behind file
+
+  Step 2.  Add the following using statements at the top:
+
+           using System.Data;
+           using System.Xml;
+
+  Step 3.  Inside the Button Click event, write this code:
+
+-------- PASTE THIS INTO Button1_Click --------
+
+protected void Button1_Click(object sender, EventArgs e)
+{
+    DataSet ds = new DataSet();
+    ds.ReadXml(Server.MapPath("Practical3XML1.xml"));
+    GridView1.DataSource = ds;
+    GridView1.DataBind();
+}
+
+-----------------------------------------------
+
+  WHAT THIS CODE DOES:
+  - DataSet ds         = Creates an empty table in memory
+  - ds.ReadXml(...)    = Reads data from the XML file
+  - Server.MapPath()   = Gets the correct file path on the server
+  - DataSource         = Connects the GridView to the data
+  - DataBind()         = Loads and displays the data in the grid
+
+
+================================================================
+PART 6 : RUN THE APPLICATION
+================================================================
+
+  Step 1.  Press F5 (or click the Run button)
+
+  Step 2.  The browser will open with your Web Form
+
+  Step 3.  Click the Button
+
+  Step 4.  The GridView will display all 3 students
+           from the XML file in a table format
+
+
+================================================================
+EXPECTED OUTPUT (Table on Screen)
+================================================================
+
+  +------------+-----------+-----------+---------+-----------+-------+
+  | First Name | Last Name | Stream    | Course  | UID       | Class |
+  +------------+-----------+-----------+---------+-----------+-------+
+  | Aadish     | Das       | Science   | BSc I.T | 24BIT044  | SYIT  |
+  | Amit       | Sharma    | Commerce  | BCom    | 24BCOM021 | SYCOM |
+  | Pooja      | Patel     | Arts      | BA      | 24BA013   | SYBA  |
+  +------------+-----------+-----------+---------+-----------+-------+
+
+
+================================================================
+QUICK SUMMARY - STEPS AT A GLANCE
+================================================================
+
+  1. Create project      >  ASP.NET Web App (C#) > Empty
+  2. Add XML file        >  Practical3XML1.xml
+  3. Enter student data  >  3 students with 6 fields each
+  4. Add Web Form        >  WebForm1.aspx
+  5. Add Button          >  Toolbox > Button
+  6. Add GridView        >  Toolbox > GridView
+  7. Set AutoGenerateColumns = False
+  8. Add BoundField columns (firstname, lastname, etc.)
+  9. Write code-behind   >  ReadXml + DataBind
+  10. Run with F5        >  Click button to see table
+
+================================================================

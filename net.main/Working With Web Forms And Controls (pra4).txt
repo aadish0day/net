@@ -1,0 +1,254 @@
+Q1] VALIDATION CONTROLS
+Creating design and adding validators:
+Add ControlToValidate to all (name of input box)
+For empty fields use RequiredFieldValidator
+For matching specific values use RegularExpressionValidator (change validationExpression based on needs eg- mobile, email)
+For age range validation use RangeValidator (add min, max value)
+For confirming password use CompareVlidator (controlToCompare - password and ControlToValidate - confirmPassword)
+Code:
+
+Default.aspx
+
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <asp:Label ID="Label1" runat="server" Text="Enter Your Name: "></asp:Label>
+        <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Name cannot be left blank" ControlToValidate="TextBox1"></asp:RequiredFieldValidator>
+        <br />
+
+        <asp:Label ID="Label2" runat="server" Text="Enter Confirm Name: "></asp:Label>
+        <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>
+        <asp:CompareValidator ID="CompareValidator1" runat="server" ErrorMessage="Name Dosen't Match" ControlToCompare="TextBox2" ControlToValidate="TextBox1" Type="String"></asp:CompareValidator>
+        <br />
+
+        <asp:Label ID="Label3" runat="server" Text="Enter Your Age: "></asp:Label>
+        <asp:TextBox ID="TextBox3" runat="server"></asp:TextBox>
+        <asp:RangeValidator ID="RangeValidator1" runat="server" ErrorMessage="Age must be between 14 and 19" ControlToValidate="TextBox3" MinimumValue="14" MaximumValue="19" Type="Integer"></asp:RangeValidator>
+        <br />
+
+        <asp:Button ID="Button1" runat="server" Text="Button" BackColor="#99FF99" BorderColor="#33CC33" />
+        <br />
+
+    </div>
+    </form>
+</body>
+</html>
+
+
+# Web.config 
+
+<?xml version="1.0"?>
+
+<configuration>
+
+    <system.web>
+      <compilation debug="true" targetFramework="4.5.2" />
+      <httpRuntime targetFramework="4.5.2" />
+    </system.web>
+
+    <appSettings>
+      <add key="ValidationSettings:UnobtrusiveValidationMode" value="None" />
+    </appSettings>
+
+</configuration>
+
+
+Q2] Design a ASP.NET application to add calendar control and display selected date for calendar
+Code:
+
+Default.aspx:
+
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+
+        <h1>Calendar Control:</h1>
+
+        <asp:Calendar ID="Calendar1" runat="server" 
+            OnDayRender="Calendar1_DayRender">
+        </asp:Calendar>
+
+        <br />
+
+        <asp:Button ID="Button1" runat="server" Text="Show Selected Date" 
+            OnClick="Button1_Click" /><br /><br />
+
+        <asp:Label ID="Label1" runat="server" Text=""></asp:Label><br />
+        <asp:Label ID="Label2" runat="server" Text=""></asp:Label>
+
+    </div>
+    </form>
+</body>
+</html>
+
+
+# Default.aspx.cs:
+
+using System;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class _Default : System.Web.UI.Page
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        // This label shows current date
+        Label2.Text = "Today's Date: " + DateTime.Now.ToString("dd-MM-yyyy");
+    }
+
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        // Read selected date from Calendar
+        DateTime selectedDate = Calendar1.SelectedDate;
+
+        // If no date is selected, show message
+        if (selectedDate == DateTime.MinValue)
+        {
+            Label1.Text = "No date selected!";
+        }
+        else
+        {
+            Label1.Text = "Selected Date: " + selectedDate.ToString("dd-MM-yyyy");
+        }
+    }
+
+    protected void Calendar1_DayRender(object sender, DayRenderEventArgs e)
+    {
+        // Christmas Day
+        if (e.Day.Date.Day == 25 && e.Day.Date.Month == 12)
+        {
+            e.Cell.Controls.Add(new LiteralControl("<br/> Christmas"));
+        }
+
+        // Highlight range: Dec 23-28 (2025)
+        if (e.Day.Date > new DateTime(2025, 12, 23) &&
+            e.Day.Date <= new DateTime(2025, 12, 28))
+        {
+            e.Cell.BackColor = System.Drawing.Color.Black;
+            e.Cell.ForeColor = System.Drawing.Color.Green;
+            e.Cell.BorderWidth = 2;
+        }
+    }
+}
+
+
+
+Q3] Create one add rotator control to display the images (minimum 6 images)
+Code:
+Step1: Here we first create an image folder through solution explorer in visual studio
+Solution explorer/project right click/new folder/images
+
+Step 2: Second we create an xml file(in this file we add all images and tags)
+File/new/file/xml file
+Code (addFile.xml) :
+
+<?xml version="1.0" encoding="utf-8"?>
+<Advertisements>
+
+  <Ad>
+    <ImageURL>Images/img1.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Jaipur</NavigateUrl>
+    <AlternateText>Jaipur - The Pink City</AlternateText>
+    <Impressions>10</Impressions>
+    <Keyword>Jaipur</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img2.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Jodhpur</NavigateUrl>
+    <AlternateText>Jodhpur - The Blue City</AlternateText>
+    <Impressions>20</Impressions>
+    <Keyword>Jodhpur</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img3.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Udaipur</NavigateUrl>
+    <AlternateText>Udaipur - City of Lakes</AlternateText>
+    <Impressions>30</Impressions>
+    <Keyword>Udaipur</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img4.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Ajmer</NavigateUrl>
+    <AlternateText>Ajmer - Historical City</AlternateText>
+    <Impressions>25</Impressions>
+    <Keyword>Ajmer</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img5.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Bikaner</NavigateUrl>
+    <AlternateText>Bikaner - Desert Fort</AlternateText>
+    <Impressions>15</Impressions>
+    <Keyword>Bikaner</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img6.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Ranakpur</NavigateUrl>
+    <AlternateText>Ranakpur - Marble Temples</AlternateText>
+    <Impressions>18</Impressions>
+    <Keyword>Ranakpur</Keyword>
+  </Ad>
+
+</Advertisements>
+
+
+Step 3:Third in Default.aspx we drag and drop a rotator control
+Then we go to properties window of add rotator and in front of AdvertisementFile we write out xml file name
+And in front of ImageUrlField It will be written as ImageUrl replace that with ImageURL 
+Code (Default.aspx) :
+
+<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <h1>Add Rotator Control</h1>
+        <asp:AdRotator ID="AdRotator1" runat="server" AdvertisementFile="~/addFile.xml" />
+    </div>
+    </form>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

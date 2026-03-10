@@ -1,0 +1,189 @@
+================================================================
+          C# ARRAY METHODS - REFERENCE DOCUMENT
+================================================================
+
+
+----------------------------------------------------------------
+1. Array.Sort()
+----------------------------------------------------------------
+WHAT IT DOES:
+  Sorts all elements in the array in ascending order (low to high).
+
+WHEN TO USE:
+  When you need to arrange array elements in order.
+
+CODE:
+  int[] arr = { 5, 3, 9, 1, 4 };
+  Array.Sort(arr);
+
+  Console.WriteLine("Sorted Array:");
+  foreach (int n in arr)
+      Console.Write(n + " ");
+
+OUTPUT:
+  Sorted Array: 1 3 4 5 9
+
+
+----------------------------------------------------------------
+2. Array.Copy()
+----------------------------------------------------------------
+WHAT IT DOES:
+  Copies all elements from one array into another array.
+
+WHEN TO USE:
+  When you want a duplicate/backup of an array without
+  affecting the original.
+
+CODE:
+  int[] arr1 = { 10, 20, 30, 40 };
+  int[] arr2 = new int[arr1.Length];
+
+  Array.Copy(arr1, arr2, arr1.Length);
+
+  Console.WriteLine("Copied Array:");
+  foreach (int n in arr2)
+      Console.Write(n + " ");
+
+OUTPUT:
+  Copied Array: 10 20 30 40
+
+
+----------------------------------------------------------------
+3. Array.Reverse()
+----------------------------------------------------------------
+WHAT IT DOES:
+  Flips the array so the last element becomes first
+  and the first becomes last.
+
+WHEN TO USE:
+  When you need elements in reverse/opposite order.
+
+CODE:
+  int[] arr = { 1, 2, 3, 4, 5 };
+  Array.Reverse(arr);
+
+  Console.WriteLine("Reversed Array:");
+  foreach (int n in arr)
+      Console.Write(n + " ");
+
+  Console.ReadKey();
+
+OUTPUT:
+  Reversed Array: 5 4 3 2 1
+
+
+----------------------------------------------------------------
+4. Array.IndexOf()
+----------------------------------------------------------------
+WHAT IT DOES:
+  Searches for a specific value and returns its position
+  (index) in the array. Index starts from 0.
+  Returns -1 if the value is not found.
+
+WHEN TO USE:
+  When you need to find the position/location of a value
+  inside an array.
+
+CODE:
+  int[] arr = { 8, 3, 6, 9, 2 };
+
+  int index = Array.IndexOf(arr, 9);
+
+  Console.WriteLine("Index of 9: " + index);
+  Console.ReadKey();
+
+OUTPUT:
+  Index of 9: 3
+  (Because 9 is at position 3, counting from 0)
+
+
+----------------------------------------------------------------
+5. Array.Length
+----------------------------------------------------------------
+WHAT IT DOES:
+  Returns the total number of elements stored in the array.
+
+WHEN TO USE:
+  When you need to know how many items are in the array,
+  especially useful in loops.
+
+CODE:
+  int[] arr = { 12, 14, 16, 18, 20 };
+
+  Console.WriteLine("Array Length: " + arr.Length);
+  Console.ReadKey();
+
+OUTPUT:
+  Array Length: 5
+
+
+----------------------------------------------------------------
+6. Compare Two Arrays and Find the Smaller One
+----------------------------------------------------------------
+WHAT IT DOES:
+  Takes two arrays as input from the user, compares their
+  sizes, and displays whichever array is smaller.
+
+WHEN TO USE:
+  When working with multiple arrays and you need to compare
+  or select based on size.
+
+CODE:
+  // --- First Array Input ---
+  Console.Write("Enter size of first array: ");
+  int size1 = int.Parse(Console.ReadLine());
+  int[] arr1 = new int[size1];
+
+  Console.WriteLine("Enter elements of first array:");
+  for (int i = 0; i < size1; i++)
+      arr1[i] = int.Parse(Console.ReadLine());
+
+  // --- Second Array Input ---
+  Console.Write("Enter size of second array: ");
+  int size2 = int.Parse(Console.ReadLine());
+  int[] arr2 = new int[size2];
+
+  Console.WriteLine("Enter elements of second array:");
+  for (int i = 0; i < size2; i++)
+      arr2[i] = int.Parse(Console.ReadLine());
+
+  // --- Comparison ---
+  Console.WriteLine("\nSmaller array is:");
+
+  if (arr1.Length < arr2.Length)
+      PrintArray(arr1);
+  else if (arr2.Length < arr1.Length)
+      PrintArray(arr2);
+  else
+      Console.WriteLine("Both arrays are of equal size.");
+
+  Console.ReadKey();
+
+  // --- Helper Method ---
+  static void PrintArray(int[] arr)
+  {
+      foreach (int num in arr)
+          Console.Write(num + " ");
+      Console.WriteLine();
+  }
+
+EXAMPLE OUTPUT:
+  Enter size of first array: 3
+  Enter size of second array: 5
+  Smaller array is: [elements of first array]
+
+
+================================================================
+                        QUICK SUMMARY
+================================================================
+
+  Method            | What It Does
+  ------------------|------------------------------------------
+  Array.Sort()      | Sorts elements low to high
+  Array.Copy()      | Duplicates an array into another
+  Array.Reverse()   | Flips the order of elements
+  Array.IndexOf()   | Finds the position of a value
+  Array.Length      | Returns the count of elements
+  Size Comparison   | Finds and prints the smaller array
+
+================================================================

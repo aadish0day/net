@@ -1,0 +1,152 @@
+Step 1: Create an empty mvc application
+ Step 2: Add AccountController
+# AccountController.cs:
+
+using System;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication2.Controllers
+{
+    public class AccountController : Controller
+    {
+        [HttpGet]
+        public ActionResult Login()
+        {
+            [cite_start]// Check if the 'usernameCookie' already exists on the user's browser 
+            if (Request.Cookies["usernameCookie"] != null)
+            {
+                [cite_start]// Retrieve the cookie value and store it in ViewBag to pre-fill the form 
+                ViewBag.CookieUser = Request.Cookies["usernameCookie"].Value;
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Login(string username, string remember)
+        {
+            [cite_start]// Store the username in a Session variable for temporary state management 
+            Session["username"] = username;
+
+            [cite_start]// If the "remember" checkbox was checked (set to "on") 
+            if (remember == "on")
+            {
+                [cite_start]// Create a new persistent cookie named 'usernameCookie' 
+                HttpCookie cookie = new HttpCookie("usernameCookie");
+                cookie.Value = username;
+                
+                [cite_start]// Set the cookie to expire 7 days from now 
+                cookie.Expires = DateTime.Now.AddDays(7);
+                
+                [cite_start]// Add the cookie to the response to save it on the user's machine 
+                Response.Cookies.Add(cookie);
+            }
+
+            [cite_start]// Redirect the user to the Welcome action 
+            return RedirectToAction("Welcome");
+        }
+
+        public ActionResult Welcome()
+        {
+            [cite_start]// Retrieve the username from the Session to display on the Welcome page 
+            ViewBag.User = Session["username"];
+            return View();
+        }
+
+        public ActionResult Logout()
+        {
+            [cite_start]// Clear all data stored in the current Session 
+            Session.Clear();
+            
+            [cite_start]// Redirect the user back to the Login page 
+            return RedirectToAction("Login");
+        }
+    }
+}
+
+
+Step 3: Now for each method in AccountController we are adding views
+Login view
+
+# Login.cshtml:
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+    <div>
+        <h2>Login</h2>
+
+        @using (Html.BeginForm())
+        {
+            <label>Username:</label>
+            <input type="text" name="username" required />
+            <br />
+
+            <label>
+                <input type="checkbox" name="remember" value="on" />
+                Remember Me
+            </label>
+            <br />
+
+            <input type="submit" value="Login" />
+        }
+    </div>
+</body>
+</html>
+
+Welcome View
+# Welcome.cshtml:
+
+@{
+    ViewBag.Title="Welcome";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Welcome</title>
+</head>
+<body>
+    <div>
+        <h2>Welcome</h2>
+        @if(ViewBag.User != null)
+        {
+            <h3>Hello @ViewBag.User</h3>
+        }
+        else
+        {
+            <h3>Session Expired</h3>
+        }
+        </br>
+        @Html.ActionLink("Logout", "Logout");
+    </div>
+</body>
+</html>
+
+
+### Folder Structure Summary:
+
+**Project Root**
+├── **Controllers**
+│   └── ➔ `AccountController.cs` (Handles the login/logout logic)
+└── **Views**
+└── **Account**
+├── ➔ `Login.cshtml` (The login form)
+└── ➔ **`Welcome.cshtml`** (The landing page provided above)
+
+
+
+
+
+
+

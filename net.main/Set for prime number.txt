@@ -1,0 +1,38 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Console.Write("Enter a non-negative number: ");
+            int n = Convert.ToInt32(Console.ReadLine());
+
+            // Check if the number is negative
+            if (n < 0)
+            {
+                Console.WriteLine("Error: Factorial is not defined for negative numbers.");
+            }
+            else
+            {
+                long fact = 1; // Changed to 'long' to handle slightly larger numbers
+
+                for (int i = 1; i <= n; i++)
+                {
+                    fact *= i;
+                }
+
+                Console.WriteLine($"Factorial of {n} = {fact}");
+            }
+
+            // This keeps the console window open in VS 2015
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadKey();
+        }
+    }
+}New Text Document

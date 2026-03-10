@@ -1,0 +1,546 @@
+========================================================
+  WORKING WITH WEB FORMS AND CONTROLS IN ASP.NET
+  A Beginner-Friendly Step-by-Step Guide
+========================================================
+
+WHAT ARE WEB FORMS AND CONTROLS?
+----------------------------------
+ASP.NET Web Forms let you build interactive web pages using
+drag-and-drop controls -- pre-built components like text boxes,
+buttons, calendars, and image rotators that you place on a page.
+
+Instead of writing raw HTML for every element, ASP.NET gives
+you ready-made "server controls" written as <asp:...> tags.
+These controls run on the server and generate the final HTML
+that the user's browser receives.
+
+Each question in this guide uses a Default.aspx file (the page
+design) and sometimes a Default.aspx.cs file (the C# code that
+runs behind the scenes when a user interacts with the page).
+
+
+========================================================
+QUESTION 1 -- VALIDATION CONTROLS
+========================================================
+
+GOAL: Build a registration-style form that validates user input
+before allowing the form to be submitted. No blank fields,
+names must match, and age must be in a specific range.
+
+WHAT ARE VALIDATION CONTROLS?
+  Validation controls are special ASP.NET tags that
+  automatically check a linked input field when the user
+  clicks Submit. If the check fails, an error message
+  appears next to the field -- no page reload required.
+
+----------------------------------------------
+VALIDATORS USED IN THIS QUESTION:
+----------------------------------------------
+
+  RequiredFieldValidator
+    --> Makes sure a field is not left empty.
+    --> Key property: ControlToValidate = the TextBox to check
+
+  CompareValidator
+    --> Compares two fields to make sure they match.
+    --> Key properties:
+          ControlToValidate = the field being checked
+          ControlToCompare  = the field to compare against
+          Type              = the data type (String, Integer, etc.)
+
+  RangeValidator
+    --> Makes sure a number falls within a defined range.
+    --> Key properties:
+          ControlToValidate = the TextBox to check
+          MinimumValue      = lowest allowed value
+          MaximumValue      = highest allowed value
+          Type              = Integer (since age is a number)
+
+----------------------------------------------
+STEP 1: CREATE THE PAGE (Default.aspx)
+----------------------------------------------
+
+PASTE THIS CODE:
+----------------------------------------------------------
+<%@ Page Language="C#" AutoEventWireup="true"
+    CodeFile="Default.aspx.cs" Inherits="_Default" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Validation Controls</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+
+        <%-- NAME FIELD with Required check --%>
+        <asp:Label ID="Label1" runat="server"
+            Text="Enter Your Name: ">
+        </asp:Label>
+
+        <asp:TextBox ID="TextBox1" runat="server">
+        </asp:TextBox>
+
+        <asp:RequiredFieldValidator ID="RequiredFieldValidator1"
+            runat="server"
+            ControlToValidate="TextBox1"
+            ErrorMessage="Name cannot be left blank">
+        </asp:RequiredFieldValidator>
+        <br />
+
+        <%-- CONFIRM NAME FIELD with match check --%>
+        <asp:Label ID="Label2" runat="server"
+            Text="Enter Confirm Name: ">
+        </asp:Label>
+
+        <asp:TextBox ID="TextBox2" runat="server">
+        </asp:TextBox>
+
+        <asp:CompareValidator ID="CompareValidator1"
+            runat="server"
+            ControlToValidate="TextBox1"
+            ControlToCompare="TextBox2"
+            Type="String"
+            ErrorMessage="Names do not match">
+        </asp:CompareValidator>
+        <br />
+
+        <%-- AGE FIELD with range check --%>
+        <asp:Label ID="Label3" runat="server"
+            Text="Enter Your Age: ">
+        </asp:Label>
+
+        <asp:TextBox ID="TextBox3" runat="server">
+        </asp:TextBox>
+
+        <asp:RangeValidator ID="RangeValidator1"
+            runat="server"
+            ControlToValidate="TextBox3"
+            MinimumValue="14"
+            MaximumValue="19"
+            Type="Integer"
+            ErrorMessage="Age must be between 14 and 19">
+        </asp:RangeValidator>
+        <br />
+
+        <asp:Button ID="Button1" runat="server"
+            Text="Submit"
+            BackColor="#99FF99"
+            BorderColor="#33CC33" />
+
+    </div>
+    </form>
+</body>
+</html>
+----------------------------------------------------------
+
+----------------------------------------------
+STEP 2: FIX THE WEB.CONFIG FILE
+----------------------------------------------
+
+WHY IS THIS NEEDED?
+  Newer versions of ASP.NET use a mode called "unobtrusive
+  validation" which requires jQuery to be loaded. To keep
+  things simple for beginners, we disable this mode so
+  validators work without any extra setup.
+
+Open Web.config and make sure the <appSettings> block
+contains the following line:
+----------------------------------------------------------
+<appSettings>
+    <add key="ValidationSettings:UnobtrusiveValidationMode"
+         value="None" />
+</appSettings>
+----------------------------------------------------------
+
+Without this, you may see errors about missing scripts when
+running the validation page.
+
+----------------------------------------------
+HOW IT WORKS AT RUNTIME:
+----------------------------------------------
+
+  1. User fills in the form and clicks Submit.
+  2. Each validator checks its linked TextBox automatically.
+  3. If any check fails, the error message appears next to
+     the field and the form does NOT submit.
+  4. Only when ALL validators pass does the form submit.
+
+No C# code-behind is needed for this question -- the
+validators handle everything on their own.
+
+----------------------------------------------
+QUICK GUIDE: WHICH VALIDATOR TO USE WHEN
+----------------------------------------------
+
+  SITUATION                        USE THIS VALIDATOR
+  --------------------------       ---------------------------------
+  Field must not be blank          RequiredFieldValidator
+  Two fields must match            CompareValidator
+  Number must be in a range        RangeValidator
+  Must match a pattern (email etc) RegularExpressionValidator
+  Custom logic needed              CustomValidator
+
+
+========================================================
+QUESTION 2 -- CALENDAR CONTROL
+========================================================
+
+GOAL: Display an interactive calendar, show today's date
+automatically, let the user click a date and display it,
+and highlight a special date range (Christmas week).
+
+----------------------------------------------
+STEP 1: CREATE THE PAGE (Default.aspx)
+----------------------------------------------
+
+PASTE THIS CODE:
+----------------------------------------------------------
+<%@ Page Language="C#" AutoEventWireup="true"
+    CodeFile="Default.aspx.cs" Inherits="_Default" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Calendar Control</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+
+        <h1>Calendar Control</h1>
+
+        <%-- The Calendar control. OnDayRender fires for each day cell --%>
+        <asp:Calendar ID="Calendar1" runat="server"
+            OnDayRender="Calendar1_DayRender">
+        </asp:Calendar>
+        <br />
+
+        <asp:Button ID="Button1" runat="server"
+            Text="Show Selected Date"
+            OnClick="Button1_Click" />
+        <br /><br />
+
+        <%-- Label1: shows the user's selected date --%>
+        <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+        <br />
+
+        <%-- Label2: shows today's date (filled on page load) --%>
+        <asp:Label ID="Label2" runat="server" Text=""></asp:Label>
+
+    </div>
+    </form>
+</body>
+</html>
+----------------------------------------------------------
+
+----------------------------------------------
+STEP 2: WRITE THE CODE-BEHIND (Default.aspx.cs)
+----------------------------------------------
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class _Default : System.Web.UI.Page
+{
+    // Runs automatically every time the page loads
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        // Show today's date in Label2 as soon as the page opens
+        Label2.Text = "Today's Date: " +
+                      DateTime.Now.ToString("dd-MM-yyyy");
+    }
+
+    // Runs when the user clicks "Show Selected Date"
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        // Read whichever date the user clicked on the calendar
+        DateTime selectedDate = Calendar1.SelectedDate;
+
+        // DateTime.MinValue means nothing was clicked yet
+        if (selectedDate == DateTime.MinValue)
+        {
+            Label1.Text = "No date selected!";
+        }
+        else
+        {
+            Label1.Text = "Selected Date: " +
+                          selectedDate.ToString("dd-MM-yyyy");
+        }
+    }
+
+    // Runs once for EVERY day cell as the calendar is being drawn
+    protected void Calendar1_DayRender(object sender, DayRenderEventArgs e)
+    {
+        // Add "Christmas" label on December 25
+        if (e.Day.Date.Day == 25 && e.Day.Date.Month == 12)
+        {
+            e.Cell.Controls.Add(
+                new LiteralControl("<br/> Christmas"));
+        }
+
+        // Highlight Dec 24-28 in black and green
+        if (e.Day.Date > new DateTime(2025, 12, 23) &&
+            e.Day.Date <= new DateTime(2025, 12, 28))
+        {
+            e.Cell.BackColor = System.Drawing.Color.Black;
+            e.Cell.ForeColor = System.Drawing.Color.Green;
+            e.Cell.BorderWidth = 2;
+        }
+    }
+}
+----------------------------------------------------------
+
+HOW EACH PART WORKS:
+
+  Page_Load
+    --> This method runs every single time the page is opened
+        or refreshed. We use it to always show the current date.
+
+  DateTime.Now.ToString("dd-MM-yyyy")
+    --> Gets the current date and formats it as day-month-year
+        (e.g., 11-03-2026).
+
+  Calendar1.SelectedDate
+    --> The date the user clicked on the calendar.
+        If the user hasn't clicked anything, it equals
+        DateTime.MinValue (the lowest possible date value).
+
+  Calendar1_DayRender
+    --> This event fires once for every single day cell as
+        the calendar is being built. "e.Day.Date" gives you
+        the date of the cell currently being drawn.
+        "e.Cell" lets you change how that cell looks.
+
+  e.Cell.Controls.Add(new LiteralControl("<br/> Christmas"))
+    --> Injects custom HTML text directly into a calendar cell.
+
+RESULT ON SCREEN:
+  - A full interactive calendar is shown
+  - Today's date appears below it automatically
+  - Dec 24-28 cells appear black with green text
+  - Dec 25 shows a "Christmas" label inside the cell
+  - Clicking a date and pressing the button shows that date
+
+
+========================================================
+QUESTION 3 -- AD ROTATOR CONTROL (IMAGE SLIDESHOW)
+========================================================
+
+GOAL: Display a rotating banner/slideshow of at least 6
+images. Each image links to a different URL when clicked.
+The images rotate randomly based on assigned weightings.
+
+WHAT IS THE AD ROTATOR?
+  The AdRotator control reads a list of images from an XML
+  file and randomly displays one each time the page loads.
+  The "Impressions" value in the XML acts as a weight --
+  a higher number means that image appears more often.
+
+----------------------------------------------
+STEP 1: CREATE AN IMAGES FOLDER
+----------------------------------------------
+
+WHERE TO DO IT:
+  In Solution Explorer, right-click your project
+  --> Add --> New Folder --> name it: Images
+
+Then add at least 6 image files (jpg or png) into this folder:
+  Right-click the Images folder --> Add --> Existing Item
+  --> browse to your image files and select them
+
+Name them: img1.jpg, img2.jpg, img3.jpg, img4.jpg, img5.jpg, img6.jpg
+
+----------------------------------------------
+STEP 2: CREATE THE XML ADVERTISEMENT FILE
+----------------------------------------------
+
+WHERE TO ADD IT:
+  In the menu bar: File --> New --> File --> XML File
+  Save it in your project root as: addFile.xml
+
+WHAT IS THIS FILE?
+  This XML file is the "playlist" for the rotator.
+  Each <Ad> block defines one image, its link, its
+  alt text, and its display frequency (Impressions).
+
+PASTE THIS CODE:
+----------------------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<Advertisements>
+
+  <Ad>
+    <ImageURL>Images/img1.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Jaipur</NavigateUrl>
+    <AlternateText>Jaipur - The Pink City</AlternateText>
+    <Impressions>10</Impressions>
+    <Keyword>Jaipur</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img2.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Jodhpur</NavigateUrl>
+    <AlternateText>Jodhpur - The Blue City</AlternateText>
+    <Impressions>20</Impressions>
+    <Keyword>Jodhpur</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img3.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Udaipur</NavigateUrl>
+    <AlternateText>Udaipur - City of Lakes</AlternateText>
+    <Impressions>30</Impressions>
+    <Keyword>Udaipur</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img4.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Ajmer</NavigateUrl>
+    <AlternateText>Ajmer - Historical City</AlternateText>
+    <Impressions>25</Impressions>
+    <Keyword>Ajmer</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img5.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Bikaner</NavigateUrl>
+    <AlternateText>Bikaner - Desert Fort</AlternateText>
+    <Impressions>15</Impressions>
+    <Keyword>Bikaner</Keyword>
+  </Ad>
+
+  <Ad>
+    <ImageURL>Images/img6.jpg</ImageURL>
+    <NavigateUrl>https://en.wikipedia.org/wiki/Ranakpur</NavigateUrl>
+    <AlternateText>Ranakpur - Marble Temples</AlternateText>
+    <Impressions>18</Impressions>
+    <Keyword>Ranakpur</Keyword>
+  </Ad>
+
+</Advertisements>
+----------------------------------------------------------
+
+WHAT EACH XML TAG MEANS:
+
+  <ImageURL>       --> Path to the image file (relative to project root)
+  <NavigateUrl>    --> The URL to open when the user clicks the image
+  <AlternateText>  --> Text shown if the image fails to load (also tooltip)
+  <Impressions>    --> Display weight. Higher = shown more often.
+                       (e.g., Impressions 30 appears 3x more often than 10)
+  <Keyword>        --> Optional tag to group or filter ads by category
+
+----------------------------------------------
+STEP 3: CREATE THE PAGE (Default.aspx)
+----------------------------------------------
+
+IMPORTANT NOTE ON PROPERTIES:
+  After dragging the AdRotator onto the page in Design view,
+  go to its Properties panel and set:
+
+    AdvertisementFile --> addFile.xml
+    ImageUrlField     --> Change "ImageUrl" to "ImageURL"
+                          (must match the tag name in your XML exactly)
+
+PASTE THIS CODE:
+----------------------------------------------------------
+<%@ Page Language="C#" AutoEventWireup="true"
+    CodeFile="Default.aspx.cs" Inherits="_Default" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Ad Rotator</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+
+        <h1>Ad Rotator Control</h1>
+
+        <asp:AdRotator ID="AdRotator1" runat="server"
+            AdvertisementFile="~/addFile.xml" />
+
+    </div>
+    </form>
+</body>
+</html>
+----------------------------------------------------------
+
+  AdvertisementFile="~/addFile.xml"
+    --> Tells the AdRotator which XML file to read.
+        The "~/" means "starting from the root of the project."
+
+HOW IT WORKS AT RUNTIME:
+  Every time the page loads or refreshes, the AdRotator
+  randomly picks one <Ad> from the XML file based on
+  the Impressions weight and displays that image.
+  Clicking the image takes the user to its NavigateUrl.
+
+No C# code-behind is needed for this question.
+
+----------------------------------------------
+COMMON MISTAKE TO AVOID:
+----------------------------------------------
+
+  The default property name in Visual Studio's Properties
+  panel is "ImageUrl" (lowercase 'l') but our XML tag is
+  "ImageURL" (uppercase 'L'). These must match exactly.
+  If they don't match, no images will be displayed.
+
+  Fix: In the Properties panel, change ImageUrlField
+  from "ImageUrl" to "ImageURL".
+
+
+========================================================
+FINAL PROJECT STRUCTURES
+========================================================
+
+Question 1 (Validation Controls):
+  Project Root
+    +-- Default.aspx        (form with validators)
+    +-- Default.aspx.cs     (no code needed for Q1)
+    +-- Web.config          (validation mode set to None)
+
+Question 2 (Calendar Control):
+  Project Root
+    +-- Default.aspx        (calendar, button, labels)
+    +-- Default.aspx.cs     (Page_Load, Button click, DayRender)
+
+Question 3 (Ad Rotator):
+  Project Root
+    +-- Default.aspx        (AdRotator tag)
+    +-- Default.aspx.cs     (no code needed for Q3)
+    +-- addFile.xml         (list of 6 images and their settings)
+    +-- Images/
+          +-- img1.jpg
+          +-- img2.jpg
+          +-- img3.jpg
+          +-- img4.jpg
+          +-- img5.jpg
+          +-- img6.jpg
+
+
+========================================================
+QUICK REFERENCE: CONTROLS USED IN THIS GUIDE
+========================================================
+
+  CONTROL                    WHAT IT DOES
+  -------------------------  -----------------------------------------
+  asp:TextBox                Input field for text entry
+  asp:Label                  Displays text on the page
+  asp:Button                 Clickable button (triggers server events)
+  asp:RequiredFieldValidator  Ensures a field is not left empty
+  asp:CompareValidator       Checks that two fields match
+  asp:RangeValidator         Checks a number is within min-max range
+  asp:RegularExpressionValidator  Checks value matches a pattern
+  asp:Calendar               Interactive monthly calendar picker
+  asp:AdRotator              Randomly displays images from an XML list
+
+
+========================================================
+END OF GUIDE
+========================================================

@@ -1,0 +1,293 @@
+========================================================
+  WORKING WITH MASTER PAGES (LAYOUT PAGES) IN ASP.NET MVC
+  A Beginner-Friendly Step-by-Step Guide
+========================================================
+
+WHAT IS A MASTER PAGE (LAYOUT PAGE)?
+--------------------------------------
+A Layout Page is a shared template that wraps around all your
+other web pages. Think of it like a picture frame -- the frame
+stays the same (your header, navigation menu, and footer), but
+the picture inside changes depending on which page you visit.
+
+Instead of copy-pasting a navigation bar and footer into every
+single page, you define them once in a Layout Page and all other
+pages automatically inherit them.
+
+
+========================================================
+OVERVIEW OF WHAT WE'RE BUILDING
+========================================================
+
+We will build a simple college website with 4 pages:
+
+  - Home
+  - Academics
+  - Student
+  - Contact Us
+
+All 4 pages will share the same header, navigation bar, and
+footer defined in one Layout Page (_LayoutDemo.cshtml).
+
+
+========================================================
+STEP 1 -- CREATE THE COLLEGE CONTROLLER
+========================================================
+
+WHAT IS A CONTROLLER?
+A Controller is a C# file that handles what happens when a
+user visits a URL. Each method (called an "Action") inside
+the controller corresponds to one page on your website.
+
+WHERE TO ADD IT:
+  Right-click the "Controllers" folder in Solution Explorer
+  --> Add --> Controller --> MVC 5 Controller - Empty
+  --> Name it: CollegeController
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication9.Controllers
+{
+    public class CollegeController : Controller
+    {
+        // Handles: /College/Academics
+        public ActionResult Academics()
+        {
+            return View();
+        }
+
+        // Handles: /College/Student
+        public ActionResult Student()
+        {
+            return View();
+        }
+
+        // Handles: /College/Home
+        public ActionResult Home()
+        {
+            return View();
+        }
+
+        // Handles: /College/ContactUs
+        public ActionResult ContactUs()
+        {
+            return View();
+        }
+    }
+}
+----------------------------------------------------------
+
+Each method simply says "return the View()" -- meaning, go
+find the matching HTML page and display it.
+
+
+========================================================
+STEP 2 -- CREATE THE LAYOUT PAGE (_LayoutDemo.cshtml)
+========================================================
+
+WHAT IS A .cshtml FILE?
+A .cshtml file is an HTML file that can also run C# code.
+The "@" symbol is how you mix in C# inside the HTML.
+
+WHERE TO ADD IT:
+  In the Solution Explorer, navigate to:
+    Views --> Shared
+
+  NOTE: You may need to manually create the "Shared" folder
+  if it doesn't already exist.
+    Right-click "Views" --> Add --> New Folder --> name it "Shared"
+
+  Then inside "Shared":
+    Right-click --> Add --> View
+    Name it: _LayoutDemo
+    (The underscore at the start is a convention that tells
+     ASP.NET this file is not a full page, just a template.)
+
+PASTE THIS CODE:
+----------------------------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My College Application</title>
+</head>
+<body>
+
+    <!-- HEADER: Appears at the top of every page -->
+    <div>
+        <h1 style="color:red">This is header</h1>
+    </div>
+
+    <!-- NAVIGATION BAR: Links to all 4 pages -->
+    <div>
+        <ul>
+            <li>@Html.ActionLink("Home",       "Home",      "college")</li>
+            <li>@Html.ActionLink("Academics",  "Academics", "college")</li>
+            <li>@Html.ActionLink("Student",    "Student",   "college")</li>
+            <li>@Html.ActionLink("ContactUs",  "ContactUs", "college")</li>
+        </ul>
+    </div>
+
+    <!-- BODY CONTENT: This is where each page's unique content goes -->
+    <div>
+        @RenderBody()
+    </div>
+
+    <!-- FOOTER: Appears at the bottom of every page -->
+    <div>
+        <footer>
+            Hello From Footer
+        </footer>
+    </div>
+
+</body>
+</html>
+----------------------------------------------------------
+
+KEY THINGS TO UNDERSTAND:
+
+  @ViewBag.Title
+    --> Each page can set its own title, which appears here
+        in the browser tab.
+
+  @Html.ActionLink("Home", "Home", "college")
+    --> This generates a clickable link.
+        - First "Home"    = the text the user sees
+        - Second "Home"   = the Action method in the controller
+        - "college"       = the Controller name (CollegeController)
+
+  @RenderBody()
+    --> This is the placeholder where each page's unique
+        content will be inserted. Think of it as the
+        "slot" where the page content drops in.
+
+
+========================================================
+STEP 3 -- CREATE THE 4 VIEWS (PAGES)
+========================================================
+
+Now we create a separate page for each of the 4 actions
+in the controller. All pages will be placed inside a
+"College" folder inside "Views".
+
+WHERE TO CREATE THE FOLDER:
+  Right-click "Views" --> Add --> New Folder --> name it "College"
+
+----------------------------------------------
+HOW TO ADD EACH VIEW (repeat for all 4 pages):
+----------------------------------------------
+
+  1. Right-click the "College" folder
+  2. Click Add --> View
+  3. Fill in the dialog box as follows:
+
+     View name:        [Name of the page, e.g. Home]
+     Template:         Empty (without model)
+     Use a layout page: CHECK THIS BOX
+     Layout path:      ~/Views/Shared/_LayoutDemo.cshtml
+
+  4. Click Add
+
+Do this 4 times for:  Home | Academics | Student | ContactUs
+
+----------------------------------------------
+WHAT TO PUT INSIDE EACH VIEW:
+----------------------------------------------
+
+Because you selected "Use a layout page," you do NOT need
+to write <html>, <head>, or <body> tags. The layout handles
+all of that. Just write the content unique to that page.
+
+Example -- Home.cshtml:
+----------------------------------------------------------
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_LayoutDemo.cshtml";
+}
+
+<h2>Welcome to the College Home Page</h2>
+<p>This is the home page content.</p>
+----------------------------------------------------------
+
+Example -- ContactUs.cshtml:
+----------------------------------------------------------
+@{
+    ViewBag.Title = "Contact Us";
+    Layout = "~/Views/Shared/_LayoutDemo.cshtml";
+}
+
+<h2>Contact Us</h2>
+<p>Email us at: info@college.edu</p>
+----------------------------------------------------------
+
+The two lines at the top (inside @{ }) do two things:
+  - Set the page title (shown in the browser tab)
+  - Tell this page which Layout to use
+
+
+========================================================
+FINAL PROJECT STRUCTURE
+========================================================
+
+Your project files should look like this when done:
+
+  WebApplication9
+  |
+  +-- Controllers
+  |     +-- CollegeController.cs         (handles all 4 pages)
+  |
+  +-- Views
+        +-- College                       (folder for page content)
+        |     +-- Home.cshtml
+        |     +-- Academics.cshtml
+        |     +-- Student.cshtml
+        |     +-- ContactUs.cshtml
+        |
+        +-- Shared                        (folder for shared templates)
+              +-- _LayoutDemo.cshtml      (the master layout/frame)
+
+
+========================================================
+HOW IT ALL FITS TOGETHER (SUMMARY)
+========================================================
+
+When a user visits /College/Home, here is what happens:
+
+  1. The browser sends a request to CollegeController
+  2. The Home() action method runs and returns View()
+  3. ASP.NET finds Home.cshtml in Views/College/
+  4. Home.cshtml says "use _LayoutDemo.cshtml as my layout"
+  5. The layout wraps around Home.cshtml's content
+  6. The final page shown has:
+       - The red header at the top
+       - The navigation links
+       - Home page's unique content in the middle
+       - The footer at the bottom
+
+All 4 pages work the same way -- only the middle content changes.
+
+
+========================================================
+QUICK REFERENCE: FILES AND WHAT THEY DO
+========================================================
+
+  FILE                          WHAT IT DOES
+  ----------------------------  ---------------------------------------
+  CollegeController.cs          Defines the 4 page routes/actions
+  _LayoutDemo.cshtml            Shared template (header, nav, footer)
+  Home.cshtml                   Content for the Home page only
+  Academics.cshtml              Content for the Academics page only
+  Student.cshtml                Content for the Student page only
+  ContactUs.cshtml              Content for the Contact Us page only
+
+
+========================================================
+END OF GUIDE
+========================================================

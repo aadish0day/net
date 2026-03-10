@@ -1,0 +1,179 @@
+
+
+
+Step 1: Create An Empty MVC Project
+Step 2: In the model folder add a class named as GuestResponse.cs
+
+# GuestResponse.cs:
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace WebApplication7.Models
+{
+    public class GuestResponse
+    {
+        public string Name { get; set; }
+        
+        public string Email { get; set; }
+        
+        public string Phone { get; set; }
+        
+        public bool? WillAttend { get; set; }
+    }
+}
+
+Make A Controller 
+Make an Index View In Views Folder (We can also directly create index view by right clicking on index method in controller)
+
+# HomeController.cs:
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using WebApplication7.Models; // Essential: This links your model to the controller
+
+namespace WebApplication7.Controllers
+{
+    public class HomeController : Controller
+    {
+        // GET: Home/Index
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: Home/RsvpForm
+        [HttpGet]
+        public ActionResult RsvpForm()
+        {
+            return View();
+        }
+
+        // POST: Home/RsvpForm
+        [HttpPost]
+        public ActionResult RsvpForm(GuestResponse guestResponse)
+        {
+            // Check if the form data is valid (e.g., email is correctly formatted)
+            if (ModelState.IsValid)
+            {
+                // If valid, send the data to a "Thanks" page
+                return View("Thanks", guestResponse);
+            }
+            else
+            {
+                // If there are errors, stay on the form page
+                return View();
+            }
+        }
+    }
+}
+
+
+
+
+# Right Click on RscpForm in HttpGet Method in controller and make a view for that method with below specifications:
+
+# Views/Home/RsvpForm.cshtml file:
+
+@model WebApplication7.Models.GuestResponse
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>RSVP Form</title>
+</head>
+<body>
+    <div> 
+        @using (Html.BeginForm()) 
+        {
+            <h3>RSVP Now!</h3>
+            
+            <p>Your Name: @Html.TextBoxFor(x => x.Name)</p>
+            <p>Your Email: @Html.TextBoxFor(x => x.Email)</p>
+            <p>Your Phone: @Html.TextBoxFor(x => x.Phone)</p>
+            
+            <p>
+                Will you attend?
+                @Html.DropDownListFor(x => x.WillAttend, new[] {
+                    new SelectListItem {Text = "Yes, I'll be there", Value = bool.TrueString},
+                    new SelectListItem {Text = "No, I can't come", Value = bool.FalseString}
+                }, "Choose an option")
+            </p>
+            
+            <input type="submit" value="Submit RSVP" />
+        }
+    </div>
+</body>
+</html>
+
+Right Click on RscpForm in HttpPost Method in controller and make a view for that method with name Thanks
+
+After This we are starting with form validation in my model file 
+RsvpForm.cshtml:
+
+@model WebApplication7.Models.GuestResponse
+@{
+    ViewBag.Title = "RsvpForm";
+}
+
+<h2>RsvpForm</h2>
+<html>
+<head>
+    <link href="~/Content/Stylr.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div>
+        @using (Html.BeginForm())
+        {
+            <p>Your Name: @Html.TextBoxFor(x => x.Name)</p>
+            <p>Your Email: @Html.TextBoxFor(x => x.Email)</p>
+            <p>Your Phone: @Html.TextBoxFor(x => x.Phone)</p>
+            <p>
+                Will You Attend ??
+                @Html.DropDownListFor(x => x.WillAttend, new[] {
+                    new SelectListItem() {Text = "Yes I'll be there", Value=bool.TrueString},
+                    new SelectListItem() {Text = "No, I cannot come", Value=bool.FalseString}
+                }, "Choose an option")
+            </p>
+
+            @Html.ValidationSummary()
+            <input type="submit" value="Submit RSVP" />
+        }
+    </div>
+</body>
+</html>
+
+Project Hierarchy (Plain Text with Arrows):
+
+Project Root
+├── Content
+│   └── ➔ Stylr.css (Your custom styles)
+├── Controllers
+│   └── ➔ HomeController.cs
+├── Models
+│   └── ➔ GuestResponse.cs
+└── Views
+└── Home
+├── ➔ Index.cshtml
+├── ➔ RsvpForm.cshtml
+└── ➔ Thanks.cshtml
+
+
+
+
+
+
+
+
+

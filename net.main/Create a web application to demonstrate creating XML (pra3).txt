@@ -1,0 +1,53 @@
+Write XML
+Create new project> ASP.NET Web Application(C#)>
+Practical 3>Create>Empty>Create
+Create XML file:
+Right click Solution Explorer>Add>New Item>Data>XML file:
+
+Practical3XML1.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<students>
+
+  <student>
+    <firstname>Aadish</firstname>
+    <lastname>Das</lastname>
+    <stream>Science</stream>
+    <course>BSc I.T</course>
+    <UID>24BIT044</UID>
+    <class>SYIT</class>
+  </student>
+
+  <student>
+    <firstname>Amit</firstname>
+    <lastname>Sharma</lastname>
+    <stream>Commerce</stream>
+    <course>BCom</course>
+    <UID>24BCOM021</UID>
+    <class>SYCOM</class>
+  </student>
+
+  <student>
+    <firstname>Pooja</firstname>
+    <lastname>Patel</lastname>
+    <stream>Arts</stream>
+    <course>BA</course>
+    <UID>24BA013</UID>
+    <class>SYBA</class>
+  </student>
+
+</students>
+
+
+
+Create Web Form file:
+
+Right click Solution Explorer>Add>New Item>Web>Web Form
+
+Add Button and GridView to WebForm1.aspx
+
+Click on the grid view in design and Change attributes in properties on right side under solution explorer & change AutoGenerateColumn to False
+
+
+Click on table and click on little arrow
+

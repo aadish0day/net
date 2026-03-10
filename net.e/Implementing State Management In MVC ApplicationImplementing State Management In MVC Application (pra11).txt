@@ -1,0 +1,282 @@
+================================================================
+   PRACTICAL 11 - STATE MANAGEMENT IN AN MVC APPLICATION
+================================================================
+
+
+----------------------------------------------------------------
+OBJECTIVE
+----------------------------------------------------------------
+  Build an ASP.NET MVC application that demonstrates:
+    - Session    : Temporarily stores username after login
+    - Cookies    : Remembers username across browser sessions
+    - Login page : Takes username input with a "Remember Me" option
+    - Welcome page: Greets the user by name
+    - Logout     : Clears the session and returns to login
+
+
+================================================================
+STEP 1 : CREATE THE PROJECT
+================================================================
+
+  1.  Open Visual Studio
+
+  2.  Go to:
+      File > New > Project
+
+  3.  Select:
+      ASP.NET Web Application (.NET Framework)
+
+  4.  Choose template:
+      MVC  (Empty MVC)
+
+  5.  Click Create
+
+
+================================================================
+STEP 2 : ADD THE ACCOUNT CONTROLLER
+================================================================
+
+  Right-click the Controllers folder
+  > Add > Controller > MVC 5 Controller - Empty
+  > Name it: AccountController
+
+
+-------- PASTE THIS INTO AccountController.cs --------
+
+using System;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication2.Controllers
+{
+    public class AccountController : Controller
+    {
+        [HttpGet]
+        public ActionResult Login()
+        {
+            // Check if the 'usernameCookie' already exists on the user's browser
+            if (Request.Cookies["usernameCookie"] != null)
+            {
+                // Retrieve the cookie value to pre-fill the form
+                ViewBag.CookieUser = Request.Cookies["usernameCookie"].Value;
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Login(string username, string remember)
+        {
+            // Store the username in a Session variable (temporary)
+            Session["username"] = username;
+
+            // If the "Remember Me" checkbox was checked
+            if (remember == "on")
+            {
+                // Create a new persistent cookie named 'usernameCookie'
+                HttpCookie cookie = new HttpCookie("usernameCookie");
+                cookie.Value = username;
+
+                // Set the cookie to expire 7 days from now
+                cookie.Expires = DateTime.Now.AddDays(7);
+
+                // Save the cookie on the user's machine
+                Response.Cookies.Add(cookie);
+            }
+
+            // Redirect user to the Welcome page
+            return RedirectToAction("Welcome");
+        }
+
+        public ActionResult Welcome()
+        {
+            // Get the username from Session to display on screen
+            ViewBag.User = Session["username"];
+            return View();
+        }
+
+        public ActionResult Logout()
+        {
+            // Clear all Session data
+            Session.Clear();
+
+            // Redirect back to Login
+            return RedirectToAction("Login");
+        }
+    }
+}
+
+------------------------------------------------------
+
+
+================================================================
+STEP 3 : ADD THE VIEWS
+================================================================
+
+  For each action method, add a view:
+  Right-click inside the method > Add View > Empty (without model)
+
+
+----------------------------------------------------------------
+VIEW 1 : Login.cshtml
+----------------------------------------------------------------
+
+  Location:  Views > Account > Login.cshtml
+
+-------- PASTE THIS INTO Login.cshtml --------
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+    <div>
+        <h2>Login</h2>
+
+        @using (Html.BeginForm())
+        {
+            <label>Username:</label>
+            <input type="text" name="username" required />
+            <br />
+
+            <label>
+                <input type="checkbox" name="remember" value="on" />
+                Remember Me
+            </label>
+            <br />
+
+            <input type="submit" value="Login" />
+        }
+    </div>
+</body>
+</html>
+
+----------------------------------------------
+
+
+----------------------------------------------------------------
+VIEW 2 : Welcome.cshtml
+----------------------------------------------------------------
+
+  Location:  Views > Account > Welcome.cshtml
+
+-------- PASTE THIS INTO Welcome.cshtml --------
+
+@{
+    ViewBag.Title = "Welcome";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Welcome</title>
+</head>
+<body>
+    <div>
+        <h2>Welcome</h2>
+
+        @if (ViewBag.User != null)
+        {
+            <h3>Hello @ViewBag.User</h3>
+        }
+        else
+        {
+            <h3>Session Expired</h3>
+        }
+
+        <br />
+        @Html.ActionLink("Logout", "Logout")
+    </div>
+</body>
+</html>
+
+------------------------------------------------
+
+
+================================================================
+FOLDER STRUCTURE
+================================================================
+
+  Project Root/
+     |
+     |-- Controllers/
+     |     |-- AccountController.cs    (Login, Welcome, Logout logic)
+     |
+     |-- Views/
+           |-- Account/
+                 |-- Login.cshtml      (Login form with Remember Me)
+                 |-- Welcome.cshtml    (Welcome page with Logout link)
+
+
+================================================================
+HOW STATE MANAGEMENT WORKS HERE
+================================================================
+
+  METHOD       WHAT IT STORES         HOW LONG IT LASTS
+  -----------  ---------------------  --------------------------
+  Session      Username after login   Until browser is closed
+                                       or Logout is clicked
+  Cookie       Username (if ticked)   7 days on user's machine
+                                       (persists even after close)
+
+
+================================================================
+HOW EACH ACTION METHOD WORKS
+================================================================
+
+  METHOD          WHAT IT DOES
+  --------------  ----------------------------------------------
+  Login (GET)     Opens the login page.
+                  Checks if a cookie exists and pre-fills name.
+
+  Login (POST)    Receives form data (username + checkbox).
+                  Saves username to Session.
+                  If "Remember Me" checked, saves a 7-day Cookie.
+                  Redirects to Welcome page.
+
+  Welcome         Reads username from Session.
+                  Displays "Hello [name]" or "Session Expired".
+                  Shows a Logout link.
+
+  Logout          Clears the Session.
+                  Redirects back to Login page.
+
+
+================================================================
+EXPECTED OUTPUT
+================================================================
+
+  1.  Run the project  -->  Login page appears
+
+  2.  Enter username: "Aadish"
+      Check "Remember Me"
+      Click Login
+
+  3.  Welcome page shows:
+        Hello Aadish
+        [Logout link]
+
+  4.  Click Logout  -->  Returns to Login page
+
+  5.  Reopen browser  -->  Login form pre-filled with "Aadish"
+      (because the cookie remembered the username for 7 days)
+
+
+================================================================
+QUICK SUMMARY - STEPS AT A GLANCE
+================================================================
+
+  1.  Create MVC project      >  Empty MVC template
+  2.  Add AccountController   >  4 action methods
+  3.  Add Login.cshtml        >  Views > Account folder
+  4.  Add Welcome.cshtml      >  Views > Account folder
+  5.  Run the project         >  Test login, session, cookie, logout
+
+================================================================

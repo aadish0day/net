@@ -1,0 +1,290 @@
+========================================================
+  DISPLAYING STUDENT DATA USING MODEL, VIEW & CONTROLLER
+  A Beginner-Friendly Step-by-Step Guide
+========================================================
+
+WHAT ARE WE BUILDING?
+-----------------------
+A simple ASP.NET MVC page that displays one student's details
+(Roll No, UID, First Name, Last Name, and Course) on screen.
+
+This practical introduces the core MVC pattern:
+
+  MODEL      --> Defines what a "Student" looks like (the data)
+  CONTROLLER --> Creates a student object and sends it to the page
+  VIEW       --> Receives the student object and displays it as HTML
+
+Think of it like this:
+  - The Model is a form template defining what fields exist
+  - The Controller fills in that form with real data
+  - The View presents the filled form on screen
+
+
+========================================================
+STEP 1 -- CREATE THE PROJECT
+========================================================
+
+In Visual Studio:
+  File --> New --> Project
+  --> ASP.NET Web Application (.NET Framework)
+  --> Select the "Empty" template
+  --> Check the "MVC" checkbox
+  --> Name the project: Practical5
+  --> Click OK
+
+This creates the basic folder structure:
+  Controllers/, Models/, Views/
+
+
+========================================================
+STEP 2 -- CREATE THE MODEL (Student.cs)
+========================================================
+
+WHAT IS A MODEL?
+  A Model is a C# class that defines the structure of
+  your data. Here, it describes what information we store
+  about a student -- like a blueprint for a student record.
+
+WHERE TO ADD IT:
+  Right-click the "Models" folder
+  --> Add --> Class
+  --> Name it: Student.cs
+
+PASTE THIS CODE:
+----------------------------------------------------------
+namespace Practical5.Models
+{
+    public class Student
+    {
+        public int    RollNo    { get; set; }
+        public string UID       { get; set; }
+        public string FirstName { get; set; }
+        public string LastName  { get; set; }
+        public string Course    { get; set; }
+    }
+}
+----------------------------------------------------------
+
+WHAT EACH PART MEANS:
+
+  public int RollNo { get; set; }
+    --> Defines a field called RollNo that holds a whole number.
+        "int" means integer (no decimals).
+
+  public string FirstName { get; set; }
+    --> Defines a field called FirstName that holds text.
+        "string" means a sequence of characters.
+
+  { get; set; }
+    --> This is shorthand that allows the field to be both
+        read (get) and written to (set). Without this,
+        you could not assign or retrieve values.
+
+At this point, the Student class is just a blueprint.
+No actual student data exists yet -- that comes from
+the Controller.
+
+
+========================================================
+STEP 3 -- CREATE THE CONTROLLER (MyStudentController.cs)
+========================================================
+
+WHAT DOES THE CONTROLLER DO HERE?
+  The Controller creates a real Student object, fills it
+  with actual data values, and then passes that object
+  to the View for display.
+
+WHERE TO ADD IT:
+  Right-click the "Controllers" folder
+  --> Add --> Controller
+  --> MVC 5 Controller - Empty
+  --> Name it: MyStudentController
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System.Web.Mvc;
+using Practical5.Models; // Needed so we can use the Student class
+
+namespace Practical5.Controllers
+{
+    public class MyStudentController : Controller
+    {
+        // Handles the URL: /MyStudent/Display
+        public ActionResult Display()
+        {
+            // Step 1: Create a new empty Student object
+            Student st = new Student();
+
+            // Step 2: Fill in the student's details
+            st.RollNo    = 11;
+            st.UID       = "24BIT010";
+            st.FirstName = "Aadish";
+            st.LastName  = "Das";
+            st.Course    = "BSc I.T";
+
+            // Step 3: Send the filled student object to the View
+            return View(st);
+        }
+    }
+}
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  using Practical5.Models;
+    --> This line imports the Models folder so the controller
+        can use the Student class we defined in Step 2.
+        Without this, C# would not know what "Student" is.
+
+  Student st = new Student();
+    --> Creates a new Student object called "st".
+        At this point all its fields are empty/default.
+
+  st.RollNo = 11;
+    --> Assigns the value 11 to the RollNo field of "st".
+        The remaining lines do the same for the other fields.
+
+  return View(st);
+    --> Tells ASP.NET to find the matching View file
+        (Display.cshtml) and pass the "st" object to it.
+        Inside the View, this object is accessible as "Model".
+
+
+========================================================
+STEP 4 -- CREATE THE VIEW (Display.cshtml)
+========================================================
+
+WHAT DOES THE VIEW DO?
+  The View receives the Student object from the Controller
+  and uses it to build the HTML page the user sees.
+
+WHERE TO ADD IT:
+  Right-click the Display() method name in the controller
+  --> Add View
+  --> View name: Display
+  --> Template: Empty (without model)
+  --> Click Add
+
+  This creates the file at: Views/MyStudent/Display.cshtml
+
+PASTE THIS CODE:
+----------------------------------------------------------
+@model Practical5.Models.Student
+
+<h2>Display</h2>
+
+<h3>Your Details:</h3>
+
+<p>Roll No: @Model.RollNo</p>
+<p>UID: @Model.UID</p>
+<p style="color: royalblue">First Name: @Model.FirstName</p>
+<p style="color: aqua">Last Name: @Model.LastName</p>
+<p>Course: @Model.Course</p>
+----------------------------------------------------------
+
+HOW EACH PART WORKS:
+
+  @model Practical5.Models.Student
+    --> This line at the very top tells the View what type
+        of data it will receive. It must match exactly what
+        the Controller passed via return View(st).
+        Without this line, "Model" would be undefined.
+
+  @Model.RollNo
+    --> The "@" symbol switches from HTML to C#.
+        "Model" refers to the Student object sent from
+        the Controller. ".RollNo" reads its RollNo field.
+        ASP.NET replaces this with the actual value (11).
+
+  style="color: royalblue"
+    --> Inline CSS that changes the text color of that
+        paragraph. "royalblue" and "aqua" are named
+        CSS color values.
+
+RESULT ON SCREEN:
+----------------------------------------------------------
+  Display
+
+  Your Details:
+
+  Roll No: 11
+  UID: 24BIT010
+  First Name: Aadish        (shown in blue)
+  Last Name: Das            (shown in aqua/cyan)
+  Course: BSc I.T
+----------------------------------------------------------
+
+
+========================================================
+HOW THE THREE FILES CONNECT
+========================================================
+
+  Student.cs (Model)
+    --> Defines 5 fields: RollNo, UID, FirstName,
+        LastName, Course. Just a blueprint, no real data.
+
+  MyStudentController.cs (Controller)
+    --> Creates a Student object, sets all 5 fields to
+        real values, and passes the object to Display.cshtml.
+
+  Display.cshtml (View)
+    --> Receives the Student object as "Model" and prints
+        each field inside HTML paragraph tags.
+
+The flow when a user visits /MyStudent/Display:
+
+  Browser sends request
+       |
+       v
+  MyStudentController.Display() runs
+       |
+       v
+  Creates and fills a Student object
+       |
+       v
+  Passes object to Display.cshtml
+       |
+       v
+  Display.cshtml builds the HTML page
+       |
+       v
+  User sees the student details on screen
+
+
+========================================================
+FINAL PROJECT STRUCTURE
+========================================================
+
+  Practical5
+  |
+  +-- Controllers
+  |     +-- MyStudentController.cs   (creates student data)
+  |
+  +-- Models
+  |     +-- Student.cs               (defines student fields)
+  |
+  +-- Views
+        +-- MyStudent
+              +-- Display.cshtml     (shows student details)
+
+
+========================================================
+QUICK REFERENCE
+========================================================
+
+  TERM             MEANING
+  ---------------  ------------------------------------------------
+  Model            C# class that defines the data structure
+  Controller       C# class that prepares data and picks a View
+  View             .cshtml file that builds the HTML for the user
+  @model           Declares what data type the View will receive
+  Model            (in View) The object passed from the Controller
+  @Model.FieldName Prints the value of a specific field on screen
+  return View(st)  Sends the object "st" to the matching View file
+  { get; set; }    Allows a field to be read and written to
+  new Student()    Creates a new empty instance of the Student class
+
+
+========================================================
+END OF GUIDE
+========================================================

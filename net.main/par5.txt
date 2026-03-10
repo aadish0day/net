@@ -1,0 +1,62 @@
+
+Create new .net application with empty template and tick the
+MVC checkbox add new class file to models folder called Student.cs
+
+# Student.cs- it is a model 
+
+namespace Practical5.Models
+{
+    public class Student
+    {
+        public int RollNo { get; set; }
+        
+        public string UID { get; set; }
+        
+        public string FirstName { get; set; }
+        
+        public string LastName { get; set; }
+        
+        public string Course { get; set; }
+    }
+}
+
+# MyController.cs- it is a controller
+
+using System.Web.Mvc;
+using Practical5.Models;
+
+namespace Practical5.Controllers
+{
+    public class MyStudentController : Controller
+    {
+        // GET: MyStudent/Display
+        public ActionResult Display()
+        {
+            Student st = new Student();
+
+            st.RollNo = 11;
+            st.UID = "24BIT010";
+            st.FirstName = "Aadish";
+            st.LastName = "Das";
+            st.Course = "BSc I.T";
+
+            // Sending the student object 'st' to the View
+            return View(st);
+        }
+    }
+}
+
+# View file: Display.cshtml it is a view added in controller
+
+
+@model Practical5.Models.Student
+
+<h2>Display</h2>
+
+<h3>Your Details:</h3>
+
+<p>Roll No: @Model.RollNo</p>
+<p>UID: @Model.UID</p>
+<p style="color: royalblue">First Name: @Model.FirstName</p>
+<p style="color: aqua">Last Name: @Model.LastName</p>
+<p>Course: @Model.Course</p>

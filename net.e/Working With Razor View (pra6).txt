@@ -1,0 +1,551 @@
+========================================================
+  WORKING WITH RAZOR VIEWS IN ASP.NET MVC
+  A Beginner-Friendly Step-by-Step Guide
+========================================================
+
+WHAT IS A RAZOR VIEW?
+-----------------------
+A Razor View is a webpage file (.cshtml) that mixes regular
+HTML with C# code. The "@" symbol is the key -- whenever you
+see "@" in a .cshtml file, it means C# code is running there.
+
+Razor Views live inside the "Views" folder of your project
+and are responsible for what the user actually sees on screen.
+
+The pattern in ASP.NET MVC always follows three steps:
+  1. The Controller receives the user's request
+  2. The Controller prepares any data needed
+  3. The View displays that data as HTML
+
+
+========================================================
+QUESTION 1 -- DISPLAY A WELCOME MESSAGE
+========================================================
+
+GOAL: Show a welcome message with today's day of the week.
+
+FILES INVOLVED:
+  Controllers/IndexController.cs
+  Views/Index/Index.cshtml
+
+----------------------------------------------
+STEP 1: CREATE THE CONTROLLER
+----------------------------------------------
+
+WHERE TO ADD IT:
+  Right-click "Controllers" --> Add --> Controller
+  --> MVC 5 Controller - Empty --> Name it: IndexController
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication5.Controllers
+{
+    public class IndexController : Controller
+    {
+        // Handles the URL: /Index/Index
+        public ActionResult Index()
+        {
+            // Tells ASP.NET to find and display Index.cshtml
+            // inside the Views/Index folder
+            return View();
+        }
+    }
+}
+----------------------------------------------------------
+
+----------------------------------------------
+STEP 2: CREATE THE VIEW
+----------------------------------------------
+
+WHERE TO ADD IT:
+  Right-click the Index() method --> Add View
+  View name: Index
+  Template: Empty (without model)
+  Do NOT check "Use a layout page" for now
+
+PASTE THIS CODE:
+----------------------------------------------------------
+@{
+    ViewBag.Title = "Welcome";
+}
+
+<h1>Welcome Page</h1>
+
+@{
+    var Title = "Welcome to Razor Syntax!";
+    var weekDay = DateTime.Now.DayOfWeek;
+    var HomeMessage = Title + " Today is: " + weekDay;
+}
+
+<p>Razor Message: @HomeMessage</p>
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  @{ ... }
+    --> This block runs C# code. Variables are defined here.
+
+  DateTime.Now.DayOfWeek
+    --> A built-in C# command that gives you the current day
+        (e.g., Monday, Tuesday, etc.)
+
+  @HomeMessage
+    --> The "@" tells Razor to print the value of the
+        variable HomeMessage directly into the HTML.
+
+RESULT ON SCREEN:
+  Welcome Page
+  Razor Message: Welcome to Razor Syntax! Today is: Wednesday
+
+PROJECT STRUCTURE:
+  Controllers/
+    IndexController.cs
+  Views/
+    Index/
+      Index.cshtml
+
+
+========================================================
+QUESTION 2 -- DISPLAY NUMBERS FROM 0 TO 10
+========================================================
+
+GOAL: Use a loop inside a Razor View to print numbers 0-10.
+
+NOTE: You do NOT need a new controller. A single controller
+can have multiple Action methods, each linked to its own View.
+
+FILES INVOLVED:
+  Controllers/IndexController.cs   (updated with new action)
+  Views/Index/DisplayNumbers.cshtml
+
+----------------------------------------------
+STEP 1: ADD A NEW ACTION TO THE EXISTING CONTROLLER
+----------------------------------------------
+
+UPDATE IndexController.cs to add the DisplayNumbers action:
+----------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication5.Controllers
+{
+    public class IndexController : Controller
+    {
+        // Handles: /Index/Index
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        // Handles: /Index/DisplayNumbers  <-- NEW
+        public ActionResult DisplayNumbers()
+        {
+            return View();
+        }
+    }
+}
+----------------------------------------------------------
+
+----------------------------------------------
+STEP 2: CREATE THE VIEW
+----------------------------------------------
+
+WHERE TO ADD IT:
+  Right-click the DisplayNumbers() method --> Add View
+  View name: DisplayNumbers
+  Template: Empty (without model)
+
+PASTE THIS CODE:
+----------------------------------------------------------
+@{
+    ViewBag.Title = "DisplayNumbers";
+}
+
+<h2>Display Numbers between 0 to 10</h2>
+
+@{
+    for (int i = 0; i <= 10; i++)
+    {
+        <p>Current Number Is: @i</p>
+    }
+}
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  for (int i = 0; i <= 10; i++)
+    --> This is a standard C# for-loop. It starts at 0,
+        runs while i is less than or equal to 10, and
+        increases i by 1 each time.
+
+  <p>Current Number Is: @i</p>
+    --> Inside the loop, this line of HTML is repeated
+        for each value of i. The "@i" prints the
+        current number.
+
+RESULT ON SCREEN:
+  Current Number Is: 0
+  Current Number Is: 1
+  Current Number Is: 2
+  ... (all the way to 10)
+
+PROJECT STRUCTURE:
+  Controllers/
+    IndexController.cs        (now has 2 action methods)
+  Views/
+    Index/
+      Index.cshtml
+      DisplayNumbers.cshtml   (new file)
+
+
+========================================================
+QUESTION 4 -- DISPLAY VALUES OF AN ARRAY
+========================================================
+
+GOAL: Pass an array of course names from the Controller
+      to the View and display each item on screen.
+
+FILES INVOLVED:
+  Controllers/IndexController.cs   (updated with new action)
+  Views/Index/my_array.cshtml
+
+----------------------------------------------
+STEP 1: ADD A NEW ACTION TO THE CONTROLLER
+----------------------------------------------
+
+WHAT IS HAPPENING HERE?
+  This time, the Controller is not just returning a blank
+  View. It is creating a string array and passing it to
+  the View as data. This is called "passing a Model."
+
+UPDATE IndexController.cs:
+----------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication5.Controllers
+{
+    public class IndexController : Controller
+    {
+        // Handles: /Index/Index
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        // Handles: /Index/DisplayNumbers
+        public ActionResult DisplayNumbers()
+        {
+            return View();
+        }
+
+        // Handles: /Index/my_array  <-- NEW
+        public ActionResult my_array()
+        {
+            // Creates an array of 3 course names
+            string[] courses = { "FYIT", "SYIT", "TYIT" };
+
+            // Passes the array to the View
+            // The View will receive this as "Model"
+            return View(courses);
+        }
+    }
+}
+----------------------------------------------------------
+
+----------------------------------------------
+STEP 2: CREATE THE VIEW
+----------------------------------------------
+
+WHERE TO ADD IT:
+  Right-click the my_array() method --> Add View
+  View name: my_array
+  Template: Empty (without model)
+
+PASTE THIS CODE:
+----------------------------------------------------------
+@model string[]
+
+@{
+    ViewBag.Title = "my_array";
+}
+
+<h2>This is the list of courses in SYIT:</h2>
+
+@foreach (string cname in Model)
+{
+    <h2>@cname</h2>
+}
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  @model string[]
+    --> This line at the TOP tells the View what type of
+        data it will receive. Here it expects a string array.
+        Without this line, the View does not know what "Model" is.
+
+  @foreach (string cname in Model)
+    --> Loops through every item in the array.
+        "Model" refers to the courses array passed from
+        the controller. "cname" is the current course name
+        in each loop round.
+
+  <h2>@cname</h2>
+    --> Prints each course name as a heading.
+
+RESULT ON SCREEN:
+  This is the list of courses in SYIT:
+  FYIT
+  SYIT
+  TYIT
+
+PROJECT STRUCTURE:
+  Controllers/
+    IndexController.cs          (now has 3 action methods)
+  Views/
+    Index/
+      Index.cshtml
+      DisplayNumbers.cshtml
+      my_array.cshtml           (new file)
+
+
+========================================================
+QUESTION 6 -- DISPLAY DATA IN TABLE FORMAT USING A MODEL
+========================================================
+
+GOAL: Use a Model class to define structured data (movies),
+      create a list of that data in the Controller, and
+      display it as an HTML table in the View.
+
+      This introduces the full MVC pattern:
+      MODEL --> CONTROLLER --> VIEW
+
+FILES INVOLVED:
+  Models/UserModel.cs          (defines the data structure)
+  Controllers/TestController.cs (creates the data list)
+  Views/Test/Index.cshtml      (displays the table)
+
+----------------------------------------------
+WHAT IS A MODEL?
+----------------------------------------------
+A Model is a C# class that defines the shape of your data.
+Think of it like a blueprint. Before we can store or display
+movie information, we need to define: what fields does a
+movie have?
+
+In this case, a movie has:
+  - Movie Name
+  - Release Date
+  - Movie Duration
+
+----------------------------------------------
+STEP 1: CREATE THE MODEL
+----------------------------------------------
+
+WHERE TO ADD IT:
+  Right-click the "Models" folder --> Add --> Class
+  Name it: UserModel.cs
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace WebApplication5.Models
+{
+    public class UserModel
+    {
+        // These are the fields (properties) each movie has
+        public string MovieName     { get; set; }
+        public string ReleaseDate   { get; set; }
+        public string MovieDuration { get; set; }
+
+        // Constructor: a shortcut to fill all 3 fields at once
+        // when creating a new movie object
+        public UserModel(string moviename, string releasedate, string movieduration)
+        {
+            MovieName     = moviename;
+            ReleaseDate   = releasedate;
+            MovieDuration = movieduration;
+        }
+    }
+}
+----------------------------------------------------------
+
+WHAT IS A CONSTRUCTOR?
+  A constructor is a special method that runs automatically
+  when you create a new object. Here, instead of setting
+  each field one by one, we can pass all 3 values in one line:
+
+    new UserModel("Captain America", "2016", "2")
+
+----------------------------------------------
+STEP 2: CREATE THE CONTROLLER
+----------------------------------------------
+
+WHERE TO ADD IT:
+  Right-click "Controllers" --> Add --> Controller
+  --> MVC 5 Controller - Empty --> Name it: TestController
+
+PASTE THIS CODE:
+----------------------------------------------------------
+using WebApplication5.Models;  // Needed to use UserModel
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace WebApplication5.Controllers
+{
+    public class TestController : Controller
+    {
+        // Handles: /Test/Index
+        public ActionResult Index()
+        {
+            // Creates an empty list that will hold UserModel objects
+            List<UserModel> users = new List<UserModel>();
+
+            // Adds 4 movies to the list using the constructor
+            users.Add(new UserModel("Captain America: Civil War", "2016", "2"));
+            users.Add(new UserModel("Doctor Strange",             "2018", "3"));
+            users.Add(new UserModel("Black Panther",              "2019", "2"));
+            users.Add(new UserModel("Avengers Infinity War",      "2020", "4"));
+
+            // Passes the full list to the View
+            return View(users);
+        }
+    }
+}
+----------------------------------------------------------
+
+WHAT IS List<UserModel>?
+  A List is like an expandable array. Here, each item in the
+  list is one UserModel object (one movie). We add 4 movies,
+  then send the whole list to the View.
+
+----------------------------------------------
+STEP 3: CREATE THE VIEW
+----------------------------------------------
+
+WHERE TO ADD IT:
+  Right-click the Index() method inside TestController
+  --> Add View
+  View name: Index
+  Template: Empty (without model)
+
+PASTE THIS CODE:
+----------------------------------------------------------
+@model IEnumerable<WebApplication5.Models.UserModel>
+
+@{
+    Layout = null;
+}
+
+<body>
+    <div>
+        @Html.Label("Welcome to test controller")
+        @Html.Label("This is list of movies")
+
+        <table border="1">
+            <tr>
+                <th>Movie Name</th>
+                <th>Release Date</th>
+                <th>Movie Duration</th>
+            </tr>
+
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => u.MovieName)</td>
+                    <td>@Html.DisplayFor(modelItem => u.ReleaseDate)</td>
+                    <td>@Html.DisplayFor(modelItem => u.MovieDuration)</td>
+                </tr>
+            }
+        </table>
+    </div>
+</body>
+----------------------------------------------------------
+
+HOW IT WORKS:
+
+  @model IEnumerable<WebApplication5.Models.UserModel>
+    --> Tells the View it will receive a collection (list)
+        of UserModel objects. IEnumerable just means
+        "a group of items you can loop through."
+
+  @foreach (var u in Model)
+    --> Loops through each movie in the list.
+        "u" represents one movie at a time.
+
+  @Html.DisplayFor(modelItem => u.MovieName)
+    --> A built-in Razor helper that safely displays the
+        value of MovieName for the current movie.
+
+  <table border="1">
+    --> Creates an HTML table with visible borders.
+        <tr> = table row, <th> = header cell, <td> = data cell.
+
+RESULT ON SCREEN:
+  +---------------------------------+-------------+----------------+
+  | Movie Name                      | Release Date| Movie Duration |
+  +---------------------------------+-------------+----------------+
+  | Captain America: Civil War      | 2016        | 2              |
+  | Doctor Strange                  | 2018        | 3              |
+  | Black Panther                   | 2019        | 2              |
+  | Avengers Infinity War           | 2020        | 4              |
+  +---------------------------------+-------------+----------------+
+
+PROJECT STRUCTURE:
+  Controllers/
+    IndexController.cs          (Questions 1, 2, 4)
+    TestController.cs           (Question 6 - new controller)
+  Models/
+    UserModel.cs                (new - defines movie fields)
+  Views/
+    Index/
+      Index.cshtml
+      DisplayNumbers.cshtml
+      my_array.cshtml
+    Test/
+      Index.cshtml              (new - displays the table)
+
+
+========================================================
+QUICK REFERENCE: KEY RAZOR CONCEPTS
+========================================================
+
+  SYNTAX              MEANING
+  ----------------    ------------------------------------------
+  @{ }                Block of C# code (no output)
+  @variable           Print the value of a variable
+  @model TypeName     Declare what data type the view receives
+  Model               The data object passed from the controller
+  @foreach            Loop through a collection in the view
+  @Html.ActionLink    Generate a clickable navigation link
+  @Html.DisplayFor    Safely display a model property value
+  @Html.Label         Display a text label
+  @RenderBody()       In layouts: slot where page content goes
+  ViewBag.Title       Sets the page title shown in browser tab
+  return View()       Controller sends user to the matching view
+  return View(data)   Controller sends data along with the view
+
+
+========================================================
+END OF GUIDE
+========================================================
